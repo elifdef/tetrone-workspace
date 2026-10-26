@@ -1,0 +1,136 @@
+services:
+  backend:
+    build:
+      context: ./tetrone-backend
+      dockerfile: Dockerfile
+      target: dev
+    container_name: tetrone_backend
+    env_file:
+      - ./tetrone-backend/.env
+      - ./.env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./tetrone-backend:/var/www
+    depends_on:
+      - db
+      - redis
+      - elasticsearch
+
+  queue:
+    build:
+      context: ./tetrone-backend
+      dockerfile: Dockerfile
+      target: dev
+    container_name: tetrone_queue
+    env_file:
+      - ./tetrone-backend/.env
+      - ./.env
+    volumes:
+      - ./tetrone-backend:/var/www
+    depends_on:
+      - backend
+      - db
+      - redis
+    command: php artisan queue:work --verbose --tries=3
+
+  schedule:
+    build:
+      context: ./tetrone-backend
+      dockerfile: Dockerfile
+      target: dev
+    container_name: tetrone_schedule
+    env_file:
+      - ./tetrone-backend/.env
+      - ./.env
+    volumes:
+      - ./tetrone-backend:/var/www
+    depends_on:
+      - backend
+      - db
+      - redis
+    command: php artisan schedule:work
+
+  socket:
+    build:
+      context: ./tetrone-websockets
+      dockerfile: Dockerfile
+      target: dev
+    container_name: tetrone_websocket
+    env_file:
+      - ./tetrone-websockets/.env
+      - ./.env
+    environment:
+      - PORT=${WS_PORT:-3000}
+    ports:
+      - "${WS_PORT:-3000}:${WS_PORT:-3000}"
+    volumes:
+      - ./tetrone-websockets:/usr/src/app
+      - /usr/src/app/node_modules
+
+  frontend:
+    build:
+      context: ./tetrone-frontend
+      dockerfile: Dockerfile
+      target: dev
+    container_name: tetrone_frontend
+    env_file:
+      - ./tetrone-frontend/.env
+      - ./.env
+    ports:
+      - "5173:5173"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - VITE_API_URL=${VITE_API_URL}
+      - VITE_WS_URL=${VITE_WS_URL}
+      - VITE_APP_NAME=${APP_NAME}
+      - VITE_MAX_FILE_SIZE_KB=${MAX_FILE_SIZE_KB}
+      - VITE_APP_ENV=${APP_ENV}
+    volumes:
+      - ./tetrone-frontend:/app
+      - /app/node_modules
+
+  db:
+    image: postgres:18-alpine
+    container_name: tetrone_postgres
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgsql-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:8.2-alpine
+    container_name: tetrone_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:9.5.5
+    container_name: tetrone_elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: tetrone_mailpit
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+
+volumes:
+  pgsql-data:
+  redis-data:
+  elasticsearch-data:

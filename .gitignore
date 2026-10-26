@@ -1,0 +1,4 @@
+.env
+tetrone-backend/
+tetrone-frontend/
+tetrone-websockets/
