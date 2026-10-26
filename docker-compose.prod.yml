@@ -91,10 +91,13 @@ services:
     image: postgres:18-alpine
     container_name: tetrone_postgres
     restart: unless-stopped
+    env_file:
+      - ./.env
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_DATABASE}
+      PGDATA: /var/lib/postgresql/data/pgdata
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
