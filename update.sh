@@ -4,7 +4,6 @@ set -e
 
 echo "starting update Tetrone..."
 
-# 1. Оновлюємо репозиторії (заміни 'main' на 'master', якщо у тебе інша дефолтна гілка)
 echo "tetrone-backend"
 cd tetrone-backend && git pull origin main && cd ..
 
