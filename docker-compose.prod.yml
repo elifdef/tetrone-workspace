@@ -97,10 +97,11 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_DATABASE}
+      PGDATA: /var/lib/postgresql/data/pgdata
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
-      - pgsql-data:/var/lib/postgresql
+      - pgsql-data:/var/lib/postgresql/data
 
   redis:
     image: redis:8.2-alpine
