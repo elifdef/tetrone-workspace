@@ -10,13 +10,15 @@ services:
       - ./tetrone-backend/.env
       - ./.env
     ports:
-      - "127.0.0.1:8000:8000"
+      - "81:8000"
     volumes:
       - ./tetrone-backend/storage:/var/www/storage
     depends_on:
       - db
       - redis
       - elasticsearch
+    networks:
+      - elifdefinternal
 
   queue:
     build:
@@ -35,6 +37,8 @@ services:
       - db
       - redis
     command: php artisan queue:work --tries=3 --timeout=90 --sleep=3
+    networks:
+      - elifdefinternal
 
   schedule:
     build:
@@ -53,6 +57,9 @@ services:
       - db
       - redis
     command: php artisan schedule:work
+    networks:
+      - elifdefinternal
+
 
   socket:
     build:
@@ -67,7 +74,9 @@ services:
     environment:
       - PORT=${WS_PORT:-3000}
     ports:
-      - "127.0.0.1:${WS_PORT:-3000}:${WS_PORT:-3000}"
+      - "82:${WS_PORT:-3000}"
+    networks:
+      - elifdefinternal
 
   frontend:
     build:
@@ -82,8 +91,13 @@ services:
         VITE_APP_ENV: production
     container_name: tetrone_frontend
     restart: unless-stopped
+    env_file:
+      - ./tetrone-frontend/.env
+      - ./.env
     ports:
-      - "127.0.0.1:5173:80"
+      - "80:80"
+    networks:
+      - elifdefinternal
     depends_on:
       - backend
 
@@ -98,8 +112,8 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_DATABASE}
       PGDATA: /var/lib/postgresql/data/pgdata
-    ports:
-      - "127.0.0.1:5432:5432"
+    networks:
+      - elifdefinternal
     volumes:
       - pgsql-data:/var/lib/postgresql/data
 
@@ -107,10 +121,10 @@ services:
     image: redis:8.2-alpine
     container_name: tetrone_redis
     restart: unless-stopped
-    ports:
-      - "127.0.0.1:6379:6379"
     volumes:
       - redis-data:/data
+    networks:
+      - elifdefinternal
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:9.5.5
@@ -120,8 +134,8 @@ services:
       - discovery.type=single-node
       - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
-    ports:
-      - "127.0.0.1:9200:9200"
+    networks:
+      - elifdefinternal
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
 
@@ -129,3 +143,7 @@ volumes:
   pgsql-data:
   redis-data:
   elasticsearch-data:
+
+networks:
+  elifdefinternal:
+    driver: bridge
