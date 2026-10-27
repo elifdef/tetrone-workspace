@@ -60,7 +60,6 @@ services:
     networks:
       - elifdefinternal
 
-
   socket:
     build:
       context: ./tetrone-websockets
@@ -91,9 +90,6 @@ services:
         VITE_APP_ENV: production
     container_name: tetrone_frontend
     restart: unless-stopped
-    env_file:
-      - ./tetrone-frontend/.env
-      - ./.env
     ports:
       - "80:80"
     networks:

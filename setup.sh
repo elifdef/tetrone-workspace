@@ -1,18 +1,37 @@
 #!/bin/bash
 set -e
 
-echo "Starting Tetrone setup..."
+echo "Starting Tetrone workspace setup..."
 
-echo "Cloning repositories..."
-[ ! -d "tetrone-backend" ] && git clone git@github.com:elifdef/tetrone-backend.git
-[ ! -d "tetrone-frontend" ] && git clone git@github.com:elifdef/tetrone-frontend.git
-[ ! -d "tetrone-websockets" ] && git clone git@github.com:elifdef/tetrone-websockets.git
+clone_or_pull() {
+    local repo_url=$1
+    local dir_name=$2
+    if [ ! -d "$dir_name" ]; then
+        echo "Cloning $dir_name..."
+        git clone "$repo_url" "$dir_name"
+    else
+        echo "Updating $dir_name..."
+        git -C "$dir_name" pull || echo "Failed to pull $dir_name, skipping..."
+    fi
+}
 
-echo "Setting up .env files..."
-[ ! -f ".env" ] && [ -f ".env.example" ] && cp .env.example .env || touch .env
-[ ! -f "tetrone-backend/.env" ] && cp tetrone-backend/.env.example tetrone-backend/.env
-[ ! -f "tetrone-frontend/.env" ] && cp tetrone-frontend/.env.example tetrone-frontend/.env
-[ ! -f "tetrone-websockets/.env" ] && cp tetrone-websockets/.env.example tetrone-websockets/.env
+clone_or_pull "git@github.com:elifdef/tetrone-backend.git" "tetrone-backend"
+clone_or_pull "git@github.com:elifdef/tetrone-frontend.git" "tetrone-frontend"
+clone_or_pull "git@github.com:elifdef/tetrone-websockets.git" "tetrone-websockets"
 
-echo "Setup complete."
-echo "IMPORTANT: Please configure the root '.env' file, then run './update.sh' to start the platform."
+echo "Configuring environment files..."
+if [ ! -f ".env" ]; then
+    if [ -f ".env.example" ]; then
+        cp .env.example .env
+        echo "Created root .env from .env.example"
+    else
+        touch .env
+        echo "Created empty root .env"
+    fi
+fi
+
+[ ! -f "tetrone-backend/.env" ] && touch tetrone-backend/.env
+[ ! -f "tetrone-frontend/.env" ] && touch tetrone-frontend/.env
+[ ! -f "tetrone-websockets/.env" ] && touch tetrone-websockets/.env
+
+echo "Setup complete! Fill out root '.env', then run './deploy.sh prod' or './deploy.sh dev'."

@@ -16,6 +16,8 @@ services:
       - db
       - redis
       - elasticsearch
+    networks:
+      - elifdefinternal
 
   queue:
     build:
@@ -33,6 +35,8 @@ services:
       - db
       - redis
     command: php artisan queue:work --verbose --tries=3
+    networks:
+      - elifdefinternal
 
   schedule:
     build:
@@ -50,6 +54,8 @@ services:
       - db
       - redis
     command: php artisan schedule:work
+    networks:
+      - elifdefinternal
 
   socket:
     build:
@@ -67,6 +73,8 @@ services:
     volumes:
       - ./tetrone-websockets:/usr/src/app
       - /usr/src/app/node_modules
+    networks:
+      - elifdefinternal
 
   frontend:
     build:
@@ -86,10 +94,12 @@ services:
       - VITE_WS_URL=${VITE_WS_URL}
       - VITE_APP_NAME=${APP_NAME}
       - VITE_MAX_FILE_SIZE_KB=${MAX_FILE_SIZE_KB}
-      - VITE_APP_ENV=${APP_ENV}
+      - VITE_APP_ENV=local
     volumes:
       - ./tetrone-frontend:/app
       - /app/node_modules
+    networks:
+      - elifdefinternal
 
   db:
     image: postgres:18-alpine
@@ -106,6 +116,8 @@ services:
       - "127.0.0.1:5432:5432"
     volumes:
       - pgsql-data:/var/lib/postgresql/data
+    networks:
+      - elifdefinternal
 
   redis:
     image: redis:8.2-alpine
@@ -114,6 +126,8 @@ services:
       - "6379:6379"
     volumes:
       - redis-data:/data
+    networks:
+      - elifdefinternal
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:9.5.5
@@ -126,6 +140,8 @@ services:
       - "9200:9200"
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - elifdefinternal
 
   mailpit:
     image: axllent/mailpit:latest
@@ -133,8 +149,14 @@ services:
     ports:
       - "8025:8025"
       - "1025:1025"
+    networks:
+      - elifdefinternal
 
 volumes:
   pgsql-data:
   redis-data:
   elasticsearch-data:
+
+networks:
+  elifdefinternal:
+    driver: bridge
