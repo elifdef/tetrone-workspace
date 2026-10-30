@@ -5,10 +5,13 @@ MODE="${1:-prod}"
 
 setup_storage_links() {
     echo "Configuring storage permissions and links..."
-    docker exec tetrone_backend chown -R www-data:www-data /var/www/storage
+    
+    docker exec tetrone_backend chown -R www-data:www-data /var/www/storage /var/www/public
     docker exec tetrone_backend chmod -R 775 /var/www/storage
-    docker exec tetrone_backend php artisan storage:unlink || true
-    docker exec tetrone_backend php artisan storage:link
+
+    docker exec tetrone_backend rm -rf /var/www/public/storage
+    docker exec tetrone_backend php artisan storage:link --force
+    docker exec tetrone_backend chown -R www-data:www-data /var/www/storage/app/public
 }
 
 if [ "$MODE" = "prod" ]; then
