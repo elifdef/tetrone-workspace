@@ -12,7 +12,8 @@ services:
     ports:
       - "81:8000"
     volumes:
-      - ./tetrone-backend/storage:/var/www/storage
+      - backend-storage:/var/www/storage/app/public
+      - ./tetrone-backend/storage/logs:/var/www/storage/logs
     depends_on:
       - db
       - redis
@@ -31,7 +32,8 @@ services:
       - ./tetrone-backend/.env
       - ./.env
     volumes:
-      - ./tetrone-backend/storage:/var/www/storage
+      - backend-storage:/var/www/storage/app/public
+      - ./tetrone-backend/storage/logs:/var/www/storage/logs
     depends_on:
       - backend
       - db
@@ -51,7 +53,8 @@ services:
       - ./tetrone-backend/.env
       - ./.env
     volumes:
-      - ./tetrone-backend/storage:/var/www/storage
+      - backend-storage:/var/www/storage/app/public
+      - ./tetrone-backend/storage/logs:/var/www/storage/logs
     depends_on:
       - backend
       - db
@@ -92,10 +95,10 @@ services:
     restart: unless-stopped
     ports:
       - "80:80"
-    networks:
-      - elifdefinternal
     depends_on:
       - backend
+    networks:
+      - elifdefinternal
 
   db:
     image: postgres:18-alpine
@@ -108,10 +111,10 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_DATABASE}
       PGDATA: /var/lib/postgresql/data/pgdata
-    networks:
-      - elifdefinternal
     volumes:
       - pgsql-data:/var/lib/postgresql/data
+    networks:
+      - elifdefinternal
 
   redis:
     image: redis:8.2-alpine
@@ -130,15 +133,16 @@ services:
       - discovery.type=single-node
       - xpack.security.enabled=false
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
-    networks:
-      - elifdefinternal
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - elifdefinternal
 
 volumes:
   pgsql-data:
   redis-data:
   elasticsearch-data:
+  backend-storage:
 
 networks:
   elifdefinternal:

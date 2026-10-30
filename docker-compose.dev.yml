@@ -12,6 +12,7 @@ services:
       - "8000:8000"
     volumes:
       - ./tetrone-backend:/var/www
+      - /var/www/vendor
     depends_on:
       - db
       - redis
@@ -30,6 +31,7 @@ services:
       - ./.env
     volumes:
       - ./tetrone-backend:/var/www
+      - /var/www/vendor
     depends_on:
       - backend
       - db
@@ -49,6 +51,7 @@ services:
       - ./.env
     volumes:
       - ./tetrone-backend:/var/www
+      - /var/www/vendor
     depends_on:
       - backend
       - db
@@ -113,7 +116,7 @@ services:
       POSTGRES_DB: ${DB_DATABASE}
       PGDATA: /var/lib/postgresql/data/pgdata
     ports:
-      - "127.0.0.1:5432:5432"
+      - "5432:5432"
     volumes:
       - pgsql-data:/var/lib/postgresql/data
     networks:
