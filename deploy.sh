@@ -4,7 +4,6 @@ set -e
 MODE="prod"
 FORCE=false
 
-# (prod, dev, --force, -f)
 for arg in "$@"; do
     case "$arg" in
         prod)
@@ -24,7 +23,6 @@ for arg in "$@"; do
     esac
 done
 
-# --force
 if [ "$FORCE" = true ]; then
     echo "=============================================================="
     echo "  [WARNING] FORCE MODE ACTIVATED ($MODE)!"
@@ -46,16 +44,23 @@ if [ "$FORCE" = true ]; then
 fi
 
 setup_storage_links() {
-    echo "Configuring storage permissions and links..."
+    echo "Configuring storage permissions, directories, and links..."
 
-    docker exec -u 0 tetrone_backend mkdir -p /var/www/storage/app/public
+    docker exec -u 0 tetrone_backend mkdir -p \
+        /var/www/storage/app/public \
+        /var/www/storage/framework/views \
+        /var/www/storage/framework/cache \
+        /var/www/storage/framework/sessions \
+        /var/www/storage/logs
+
     docker exec -u 0 tetrone_backend rm -rf /var/www/public/storage
-    docker exec -u 0 tetrone_backend ln -sfn /var/www/storage/app/public /var/www/public/storage
-    docker exec -u 0 tetrone_backend chown -R www-data:www-data /var/www/storage /var/www/public
-    docker exec -u 0 tetrone_backend chmod -R 775 /var/www/storage
+    docker exec -u 0 tetrone_backend php artisan storage:link || true
+
+    docker exec -u 0 tetrone_backend chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+    docker exec -u 0 tetrone_backend chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 }
 
-# PRODUCTION
+# ================= PRODUCTION =================
 if [ "$MODE" = "prod" ]; then
     echo "RUNNING IN PRODUCTION MODE"
     COMPOSE_FILE="docker-compose.prod.yml"
@@ -82,6 +87,7 @@ if [ "$MODE" = "prod" ]; then
         echo "Running migrate:fresh for clean production database..."
         docker exec tetrone_backend php artisan migrate:fresh --force
     else
+        echo "Running standard migrations..."
         docker exec tetrone_backend php artisan migrate --force
     fi
 
@@ -91,7 +97,7 @@ if [ "$MODE" = "prod" ]; then
 
     echo "Production deployment completed successfully!"
 
-# DEVELOPMENT
+# ================= DEVELOPMENT =================
 elif [ "$MODE" = "dev" ]; then
     echo "RUNNING IN DEVELOPMENT MODE"
     if [ -f "docker-compose.dev.yml" ]; then
@@ -99,6 +105,9 @@ elif [ "$MODE" = "dev" ]; then
     else
         COMPOSE_FILE="docker-compose.yml"
     fi
+
+    # Автоматично очищаємо старий кеш bootstrap на хості
+    rm -f tetrone-backend/bootstrap/cache/*.php 2>/dev/null || true
 
     if [ "$FORCE" = true ]; then
         echo "Destroying development containers and wiping volumes..."
@@ -109,29 +118,46 @@ elif [ "$MODE" = "dev" ]; then
         docker compose -f "$COMPOSE_FILE" down --remove-orphans
     fi
 
+    # Встановлення vendor, якщо його немає
+    if [ ! -f "tetrone-backend/vendor/autoload.php" ]; then
+        echo "Vendor not found. Installing Composer dependencies for dev..."
+        rm -rf tetrone-backend/public/storage
+
+        docker compose -f "$COMPOSE_FILE" run --rm --no-deps backend sh -c "
+            git config --global --add safe.directory /var/www && \
+            composer install --prefer-dist --no-interaction --no-scripts && \
+            composer dump-autoload --optimize --no-scripts
+        "
+    fi
+
     echo "Starting development containers..."
-    docker compose -f "$COMPOSE_FILE" up -d --build --remove-orphans
+    docker compose -f "$COMPOSE_FILE" up -d --remove-orphans
 
     echo "Waiting for services to initialize..."
     sleep 8
 
-    if ! docker exec tetrone_backend test -f /var/www/vendor/autoload.php; then
-        echo "Installing Composer dependencies for dev..."
-        docker exec tetrone_backend composer install
+    # Налаштування лінків
+    setup_storage_links
+
+    # Перевірка наявності APP_KEY та генерація, якщо він порожній
+    if grep -qE '^APP_KEY=(["'\'']{2})?$' tetrone-backend/.env 2>/dev/null; then
+        echo "APP_KEY is missing or empty. Generating encryption key..."
+        docker exec tetrone_backend php artisan key:generate --force
     fi
 
-    setup_storage_links
+    # Запуск оптимізації та дискавері
+    echo "Discovering packages and clearing dev caches..."
+    docker exec tetrone_backend php artisan package:discover --ansi
+    docker exec tetrone_backend php artisan optimize:clear
 
     echo "Running database setup..."
     if [ "$FORCE" = true ]; then
         echo "Running migrate:fresh for clean development database..."
         docker exec tetrone_backend php artisan migrate:fresh
     else
+        echo "Running standard migrations..."
         docker exec tetrone_backend php artisan migrate
     fi
-
-    echo "Running Laravel dev setup..."
-    docker exec tetrone_backend php artisan optimize:clear
 
     echo "Development environment is ready! Caching is disabled."
 fi

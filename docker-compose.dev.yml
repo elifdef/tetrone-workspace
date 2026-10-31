@@ -5,14 +5,14 @@ services:
       dockerfile: Dockerfile
       target: dev
     container_name: tetrone_backend
+    restart: unless-stopped
     env_file:
-      - ./tetrone-backend/.env
       - ./.env
     ports:
       - "8000:8000"
     volumes:
       - ./tetrone-backend:/var/www
-      - /var/www/vendor
+      - ./.env:/var/www/.env
     depends_on:
       - db
       - redis
@@ -26,12 +26,12 @@ services:
       dockerfile: Dockerfile
       target: dev
     container_name: tetrone_queue
+    restart: unless-stopped
     env_file:
-      - ./tetrone-backend/.env
       - ./.env
     volumes:
       - ./tetrone-backend:/var/www
-      - /var/www/vendor
+      - ./.env:/var/www/.env
     depends_on:
       - backend
       - db
@@ -46,12 +46,12 @@ services:
       dockerfile: Dockerfile
       target: dev
     container_name: tetrone_schedule
+    restart: unless-stopped
     env_file:
-      - ./tetrone-backend/.env
       - ./.env
     volumes:
       - ./tetrone-backend:/var/www
-      - /var/www/vendor
+      - ./.env:/var/www/.env
     depends_on:
       - backend
       - db
@@ -66,8 +66,8 @@ services:
       dockerfile: Dockerfile
       target: dev
     container_name: tetrone_websocket
+    restart: unless-stopped
     env_file:
-      - ./tetrone-websockets/.env
       - ./.env
     environment:
       - PORT=${WS_PORT:-3000}
@@ -85,8 +85,8 @@ services:
       dockerfile: Dockerfile
       target: dev
     container_name: tetrone_frontend
+    restart: unless-stopped
     env_file:
-      - ./tetrone-frontend/.env
       - ./.env
     ports:
       - "5173:5173"
@@ -125,6 +125,7 @@ services:
   redis:
     image: redis:8.2-alpine
     container_name: tetrone_redis
+    restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
@@ -135,6 +136,7 @@ services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:9.5.5
     container_name: tetrone_elasticsearch
+    restart: unless-stopped
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
@@ -149,6 +151,7 @@ services:
   mailpit:
     image: axllent/mailpit:latest
     container_name: tetrone_mailpit
+    restart: unless-stopped
     ports:
       - "8025:8025"
       - "1025:1025"
