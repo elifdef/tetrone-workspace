@@ -7,13 +7,13 @@ services:
     container_name: tetrone_backend
     restart: unless-stopped
     env_file:
-      - ./tetrone-backend/.env
       - ./.env
     ports:
       - "81:8000"
     volumes:
       - backend-storage:/var/www/storage/app/public
       - ./tetrone-backend/storage/logs:/var/www/storage/logs
+      - ./.env:/var/www/.env:ro
     depends_on:
       - db
       - redis

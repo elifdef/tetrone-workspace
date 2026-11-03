@@ -1,6 +1,38 @@
 #!/bin/bash
 set -e
 
+ensure_app_key() {
+    local env_file=".env"
+
+    if [ ! -f "$env_file" ]; then
+        if [ -f ".env.example" ]; then
+            cp .env.example "$env_file"
+            echo "Created .env from .env.example"
+        else
+            touch "$env_file"
+        fi
+    fi
+
+    # Якщо передано флаг --force (повний скид з видаленням БД) — стираємо старий ключ
+    if [ "$FORCE" = true ]; then
+        echo "Force wipe: generating brand new APP_KEY..."
+        sed -i '/^APP_KEY=/d' "$env_file"
+    fi
+
+    # Якщо ключа немає або він порожній — генеруємо новий
+    if ! grep -qE '^APP_KEY=.+' "$env_file" 2>/dev/null; then
+        echo "APP_KEY is missing or empty. Generating secure 256-bit key..."
+        local new_key="base64:$(openssl rand -base64 32)"
+
+        if grep -q '^APP_KEY=' "$env_file" 2>/dev/null; then
+            sed -i "s|^APP_KEY=.*|APP_KEY=${new_key}|" "$env_file"
+        else
+            echo "APP_KEY=${new_key}" >> "$env_file"
+        fi
+        echo "APP_KEY generated and saved to root .env!"
+    fi
+}
+
 MODE="prod"
 FORCE=false
 
@@ -42,6 +74,9 @@ if [ "$FORCE" = true ]; then
             ;;
     esac
 fi
+
+# ГЕНЕРУЄМО КЛЮЧ ДО СТАРТУ КОНТЕЙНЕРІВ (щоб Docker Compose підхопив його в env)
+ensure_app_key
 
 setup_storage_links() {
     echo "Configuring storage permissions, directories, and links..."
@@ -138,12 +173,6 @@ elif [ "$MODE" = "dev" ]; then
 
     # Налаштування лінків
     setup_storage_links
-
-    # Перевірка наявності APP_KEY та генерація, якщо він порожній
-    if grep -qE '^APP_KEY=(["'\'']{2})?$' tetrone-backend/.env 2>/dev/null; then
-        echo "APP_KEY is missing or empty. Generating encryption key..."
-        docker exec tetrone_backend php artisan key:generate --force
-    fi
 
     # Запуск оптимізації та дискавері
     echo "Discovering packages and clearing dev caches..."
