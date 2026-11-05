@@ -1,0 +1,570 @@
+.
+├── deploy.sh
+├── docker-compose.dev.yml
+├── docker-compose.prod.yml
+├── enter.sh
+├── reload.sh
+├── setup.sh
+├── structure.txt
+├── sync.sh
+├── tetrone-backend
+│   ├── Dockerfile
+│   ├── _ide_helper.php
+│   ├── _ide_helper_models.php
+│   ├── app
+│   │   ├── Broadcasting
+│   │   │   ├── MicroserviceChannel.php
+│   │   │   └── RedisStreamBroadcaster.php
+│   │   ├── Builders
+│   │   │   ├── CommentBuilder.php
+│   │   │   ├── PostBuilder.php
+│   │   │   └── UserBuilder.php
+│   │   ├── Casts
+│   │   │   ├── PostContentCast.php
+│   │   │   ├── TipTapCast.php
+│   │   │   └── TipTapDataCast.php
+│   │   ├── Collections
+│   │   │   ├── CommentCollection.php
+│   │   │   ├── PostCollection.php
+│   │   │   └── UserCollection.php
+│   │   ├── Console
+│   │   │   └── Commands
+│   │   ├── Data
+│   │   │   ├── Admin
+│   │   │   ├── Alias
+│   │   │   ├── Appeal
+│   │   │   ├── Auth
+│   │   │   ├── Chat
+│   │   │   ├── Comment
+│   │   │   ├── Friendship
+│   │   │   ├── Notification
+│   │   │   ├── Personalization
+│   │   │   ├── Poll
+│   │   │   ├── Post
+│   │   │   ├── Privacy
+│   │   │   ├── Public
+│   │   │   ├── Reaction
+│   │   │   ├── Report
+│   │   │   ├── Settings
+│   │   │   ├── Space
+│   │   │   ├── Sticker
+│   │   │   ├── Support
+│   │   │   └── User
+│   │   ├── Enums
+│   │   │   ├── AdminAction.php
+│   │   │   ├── AdminEntityType.php
+│   │   │   ├── AppealStatus.php
+│   │   │   ├── ChatRole.php
+│   │   │   ├── ChatType.php
+│   │   │   ├── EncryptionMode.php
+│   │   │   ├── FriendshipStatus.php
+│   │   │   ├── PrivacyContext.php
+│   │   │   ├── PrivacyLevel.php
+│   │   │   ├── ReportTargetType.php
+│   │   │   ├── Role.php
+│   │   │   ├── Space
+│   │   │   └── TicketStatus.php
+│   │   ├── Events
+│   │   │   ├── AttachmentReady.php
+│   │   │   └── UserBlockedEvent.php
+│   │   ├── Exceptions
+│   │   │   └── ApiException.php
+│   │   ├── Http
+│   │   │   ├── Controllers
+│   │   │   └── Middleware
+│   │   ├── Jobs
+│   │   │   ├── ExportAndDestroyUserJob.php
+│   │   │   ├── OptimizeAudioAttachment.php
+│   │   │   └── OptimizeVideoAttachment.php
+│   │   ├── Mail
+│   │   │   ├── AppealRejectedMail.php
+│   │   │   ├── AppealResolvedMail.php
+│   │   │   ├── DataExportReadyMail.php
+│   │   │   ├── EmailVerificationMail.php
+│   │   │   └── ResetPasswordCodeMail.php
+│   │   ├── Models
+│   │   │   ├── AdminLog.php
+│   │   │   ├── Chat.php
+│   │   │   ├── ChatParticipant.php
+│   │   │   ├── Comment.php
+│   │   │   ├── CustomSticker.php
+│   │   │   ├── Friendship.php
+│   │   │   ├── Handle.php
+│   │   │   ├── Hashtag.php
+│   │   │   ├── Like.php
+│   │   │   ├── LoginHistory.php
+│   │   │   ├── Message.php
+│   │   │   ├── MessageAttachment.php
+│   │   │   ├── NotificationOverride.php
+│   │   │   ├── PollVote.php
+│   │   │   ├── Post.php
+│   │   │   ├── PostAttachment.php
+│   │   │   ├── Reaction.php
+│   │   │   ├── ReactionConfig.php
+│   │   │   ├── Report.php
+│   │   │   ├── Space.php
+│   │   │   ├── SpaceInvite.php
+│   │   │   ├── SpaceMember.php
+│   │   │   ├── StickerPack.php
+│   │   │   ├── Ticket.php
+│   │   │   ├── TicketAttachment.php
+│   │   │   ├── TicketMessage.php
+│   │   │   ├── User.php
+│   │   │   ├── UserActivity.php
+│   │   │   ├── UserFeedPreference.php
+│   │   │   ├── UserPrivacyException.php
+│   │   │   └── UserWarning.php
+│   │   ├── Notifications
+│   │   │   ├── BaseMicroserviceNotification.php
+│   │   │   ├── CommentLikeNotification.php
+│   │   │   ├── CommentReactionNotification.php
+│   │   │   ├── CommentReplyNotification.php
+│   │   │   ├── ContentDeletedNotification.php
+│   │   │   ├── ContentRestoredNotification.php
+│   │   │   ├── FriendRequestAcceptedNotification.php
+│   │   │   ├── MentionNotification.php
+│   │   │   ├── NewCommentNotification.php
+│   │   │   ├── NewFriendRequestNotification.php
+│   │   │   ├── NewLikeNotification.php
+│   │   │   ├── NewMessageNotification.php
+│   │   │   ├── NewRepostNotification.php
+│   │   │   ├── NewSubscriptionPostNotification.php
+│   │   │   ├── NewWallPostNotification.php
+│   │   │   ├── PollVoteNotification.php
+│   │   │   ├── PostReactionNotification.php
+│   │   │   ├── ReportRevertedNotification.php
+│   │   │   ├── ReportReviewedNotification.php
+│   │   │   ├── Space
+│   │   │   ├── TicketReplyNotification.php
+│   │   │   └── UserWarnedNotification.php
+│   │   ├── Policies
+│   │   │   ├── ChatPolicy.php
+│   │   │   ├── CommentPolicy.php
+│   │   │   ├── MessagePolicy.php
+│   │   │   ├── PostPolicy.php
+│   │   │   ├── ReportPolicy.php
+│   │   │   ├── SpacePolicy.php
+│   │   │   ├── StickerPackPolicy.php
+│   │   │   ├── TicketPolicy.php
+│   │   │   └── UserPolicy.php
+│   │   ├── Providers
+│   │   │   ├── AppServiceProvider.php
+│   │   │   └── TelescopeServiceProvider.php
+│   │   ├── Repositories
+│   │   │   ├── ActivityRepository.php
+│   │   │   ├── AdminLogRepository.php
+│   │   │   ├── AppealRepository.php
+│   │   │   ├── ChatRepository.php
+│   │   │   ├── CommentRepository.php
+│   │   │   ├── Contracts
+│   │   │   ├── ElasticFeedRuleEngine.php
+│   │   │   ├── FeedRepository.php
+│   │   │   ├── FriendshipRepository.php
+│   │   │   ├── IdentifierRepository.php
+│   │   │   ├── LikeRepository.php
+│   │   │   ├── MessageRepository.php
+│   │   │   ├── NotificationRepository.php
+│   │   │   ├── NotificationSettingsRepository.php
+│   │   │   ├── PollRepository.php
+│   │   │   ├── PostRepository.php
+│   │   │   ├── PrivacyRepository.php
+│   │   │   ├── ReactionRepository.php
+│   │   │   ├── ReportRepository.php
+│   │   │   ├── SpaceAnalyticsRepository.php
+│   │   │   ├── SpaceInviteRepository.php
+│   │   │   ├── SpaceMemberRepository.php
+│   │   │   ├── SpaceRepository.php
+│   │   │   ├── StatsRepository.php
+│   │   │   ├── StickerRepository.php
+│   │   │   ├── TicketRepository.php
+│   │   │   └── UserRepository.php
+│   │   ├── Rules
+│   │   │   ├── AllowedTipTapContentRule.php
+│   │   │   └── Username.php
+│   │   ├── Services
+│   │   │   ├── ActivityService.php
+│   │   │   ├── Admin
+│   │   │   ├── AliasService.php
+│   │   │   ├── AppealService.php
+│   │   │   ├── AuthService.php
+│   │   │   ├── ChatEncryptionService.php
+│   │   │   ├── ChatRealtimeService.php
+│   │   │   ├── ChatService.php
+│   │   │   ├── CommentService.php
+│   │   │   ├── EmailService.php
+│   │   │   ├── FeedService.php
+│   │   │   ├── FileStorageService.php
+│   │   │   ├── FriendshipService.php
+│   │   │   ├── HashtagService.php
+│   │   │   ├── LikeService.php
+│   │   │   ├── NotificationService.php
+│   │   │   ├── NotificationSettingsService.php
+│   │   │   ├── PersonalizationService.php
+│   │   │   ├── PollService.php
+│   │   │   ├── PostService.php
+│   │   │   ├── PrivacyService.php
+│   │   │   ├── ReactionService.php
+│   │   │   ├── ReportService.php
+│   │   │   ├── SpaceAnalyticsService.php
+│   │   │   ├── SpaceInviteService.php
+│   │   │   ├── SpaceService.php
+│   │   │   ├── StatsService.php
+│   │   │   ├── StickerService.php
+│   │   │   ├── SupportService.php
+│   │   │   ├── UserNotificationService.php
+│   │   │   └── UserService.php
+│   │   ├── TipTap
+│   │   │   └── TipTapPresets.php
+│   │   ├── Traits
+│   │   │   ├── HasAliases.php
+│   │   │   ├── HasLikes.php
+│   │   │   └── HasReactions.php
+│   │   └── ValueObjects
+│   │       ├── PostContent.php
+│   │       └── TipTapContent.php
+│   ├── artisan
+│   ├── bootstrap
+│   │   ├── app.php
+│   │   ├── cache
+│   │   │   ├── packages.php
+│   │   │   └── services.php
+│   │   └── providers.php
+│   ├── codeStyle.xml
+│   ├── composer.json
+│   ├── composer.lock
+│   ├── config
+│   │   ├── app.php
+│   │   ├── auth.php
+│   │   ├── cache.php
+│   │   ├── cors.php
+│   │   ├── database.php
+│   │   ├── elastic.scout_driver.php
+│   │   ├── filesystems.php
+│   │   ├── logging.php
+│   │   ├── mail.php
+│   │   ├── queue.php
+│   │   ├── sanctum.php
+│   │   ├── scout.php
+│   │   ├── services.php
+│   │   ├── session.php
+│   │   ├── telescope.php
+│   │   └── tetrone.php
+│   ├── database
+│   │   ├── factories
+│   │   │   ├── ChatFactory.php
+│   │   │   ├── ChatParticipantFactory.php
+│   │   │   ├── CommentFactory.php
+│   │   │   ├── CustomStickerFactory.php
+│   │   │   ├── MessageFactory.php
+│   │   │   ├── PostFactory.php
+│   │   │   ├── ReportFactory.php
+│   │   │   ├── SpaceFactory.php
+│   │   │   ├── SpaceMemberFactory.php
+│   │   │   ├── StickerPackFactory.php
+│   │   │   ├── TicketFactory.php
+│   │   │   ├── TicketMessageFactory.php
+│   │   │   └── UserFactory.php
+│   │   ├── migrations
+│   │   │   ├── 0001_01_01_000000_create_users_table.php
+│   │   │   ├── 0001_01_01_000001_create_cache_table.php
+│   │   │   ├── 0001_01_01_000001_create_personal_access_tokens_table.php
+│   │   │   ├── 2025_12_31_154855_create_posts_table.php
+│   │   │   ├── 2026_01_08_105831_create_friendships_table.php
+│   │   │   ├── 2026_02_02_124421_create_comments_table.php
+│   │   │   ├── 2026_02_02_124429_create_likes_table.php
+│   │   │   ├── 2026_02_25_161237_create_login_histories_table.php
+│   │   │   ├── 2026_03_02_132208_create_notifications_table.php
+│   │   │   ├── 2026_03_02_135257_create_jobs_table.php
+│   │   │   ├── 2026_03_04_084926_create_post_attachments.php
+│   │   │   ├── 2026_03_06_164406_create_reports_table.php
+│   │   │   ├── 2026_03_07_000001_create_chats_table.php
+│   │   │   ├── 2026_03_07_000002_create_messages_table.php
+│   │   │   ├── 2026_03_07_000003_create_chat_participants_table.php
+│   │   │   ├── 2026_03_13_063240_create_poll_votes_table.php
+│   │   │   ├── 2026_03_14_130056_create_user_activities_table.php
+│   │   │   ├── 2026_03_16_162138_create_notification_overrides_table.php
+│   │   │   ├── 2026_03_23_073708_create_sticker_packs_table.php
+│   │   │   ├── 2026_03_23_073709_create_custom_stickers_table.php
+│   │   │   ├── 2026_03_23_073709_create_user_sticker_packs_table.php
+│   │   │   ├── 2026_03_23_073710_create_user_favorite_stickers_table.php
+│   │   │   ├── 2026_04_03_155806_create_user_privacy_exceptions_table.php
+│   │   │   ├── 2026_04_12_131649_create_tickets_table.php
+│   │   │   ├── 2026_04_12_131917_create_ticket_messages_table.php
+│   │   │   ├── 2026_04_12_131918_create_ticket_attachments_table.php
+│   │   │   ├── 2026_04_16_075553_create_failed_jobs_table.php
+│   │   │   ├── 2026_05_24_144904_create_handles_table.php
+│   │   │   ├── 2026_06_02_121158_create_reactions_table.php
+│   │   │   ├── 2026_06_02_121159_create_reaction_configs_table.php
+│   │   │   ├── 2026_06_13_105353_message_mentions_table.php
+│   │   │   ├── 2026_06_13_165506_create_admin_logs_table.php
+│   │   │   ├── 2026_06_13_180002_create_user_warnings_table.php
+│   │   │   ├── 2026_06_28_142003_create_spaces_tables.php
+│   │   │   ├── 2026_06_28_142046_create_space_members_tables.php
+│   │   │   ├── 2026_08_10_114602_add_ban_details_to_users_table.php
+│   │   │   ├── 2026_08_11_155626_create_hashtags_table.php
+│   │   │   ├── 2026_08_12_085128_create_user_feed_preferences_table.php
+│   │   │   ├── 2026_08_26_084248_add_new_features_to_spaces_table.php
+│   │   │   ├── 2026_08_26_093841_create_space_invites_table.php
+│   │   │   ├── 2026_08_27_143845_add_flags_to_post_attachments_table.php
+│   │   │   └── 2026_09_16_145054_add_is_pinned_to_posts_table.php
+│   │   └── seeders
+│   │       ├── DatabaseSeeder.php
+│   │       └── UserSeeder.php
+│   ├── phpunit.xml
+│   ├── public
+│   │   ├── favicon.ico
+│   │   ├── index.php
+│   │   └── robots.txt
+│   ├── routes
+│   │   ├── api
+│   │   │   ├── activity.php
+│   │   │   ├── admin.php
+│   │   │   ├── aliases.php
+│   │   │   ├── appeals.php
+│   │   │   ├── auth.php
+│   │   │   ├── chat.php
+│   │   │   ├── comments.php
+│   │   │   ├── email.php
+│   │   │   ├── friends.php
+│   │   │   ├── notifications.php
+│   │   │   ├── posts.php
+│   │   │   ├── public.php
+│   │   │   ├── reports.php
+│   │   │   ├── settings.php
+│   │   │   ├── spaces.php
+│   │   │   ├── stickers.php
+│   │   │   ├── support.php
+│   │   │   └── users.php
+│   │   ├── api.php
+│   │   ├── console.php
+│   │   └── web.php
+│   └── tests
+│       ├── Feature
+│       │   ├── ActivityApiTest.php
+│       │   ├── AdminPanelApiTest.php
+│       │   ├── AliasParsingAndResolutionTest.php
+│       │   ├── AliasesTest.php
+│       │   ├── AppealApiTest.php
+│       │   ├── AuthApiTest.php
+│       │   ├── ChatApiTest.php
+│       │   ├── ChatSecurityAndForwardTest.php
+│       │   ├── CheckIfBannedTest.php
+│       │   ├── CommentApiTest.php
+│       │   ├── CustomStickerApiTest.php
+│       │   ├── DatabaseManagerApiTest.php
+│       │   ├── DeletedUserApiTest.php
+│       │   ├── ExportAndDestroyUserJobTest.php
+│       │   ├── FriendshipApiTest.php
+│       │   ├── GlobalIdentifierFeatureTest.php
+│       │   ├── InteractionApiTest.php
+│       │   ├── NotificationTest.php
+│       │   ├── PersonalizationApiTest.php
+│       │   ├── PostApiTest.php
+│       │   ├── PostReactionConfigTest.php
+│       │   ├── PrivacyApiTest.php
+│       │   ├── ReportApiTest.php
+│       │   ├── RolePermissionsApiTest.php
+│       │   ├── SpaceApiTest.php
+│       │   ├── SpaceInviteApiTest.php
+│       │   ├── SpaceMemberApiTest.php
+│       │   ├── StaffLogApiTest.php
+│       │   ├── StickerPackApiTest.php
+│       │   ├── SupportApiTest.php
+│       │   ├── ToggleReactionTest.php
+│       │   └── UserApiTest.php
+│       ├── TestCase.php
+│       └── Unit
+│           ├── ChatEncryptionTest.php
+│           └── TipTapContentTest.php
+├── tetrone-frontend
+│   ├── Dockerfile
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── nginx.conf
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── public
+│   │   ├── blocked.jpg
+│   │   ├── default.jpg
+│   │   ├── deleted.jpg
+│   │   ├── dottore_cookie.png
+│   │   ├── friends.png
+│   │   ├── fsociety_cookie.jpg
+│   │   ├── icantdrawandigeneratethisingemini.png
+│   │   ├── images
+│   │   │   ├── profile-classic-dark.png
+│   │   │   ├── profile-classic-light.png
+│   │   │   ├── profile-modern-dark.png
+│   │   │   ├── profile-modern-light.png
+│   │   │   ├── theme-classic-dark.png
+│   │   │   ├── theme-classic-light.png
+│   │   │   ├── theme-xp-dark.png
+│   │   │   └── theme-xp-light.png
+│   │   ├── moments.png
+│   │   ├── personalize.png
+│   │   ├── post.png
+│   │   ├── sounds
+│   │   │   ├── longhorn
+│   │   │   └── meme
+│   │   └── themes
+│   │       ├── bliss.jpg
+│   │       └── red_moon_desert.jpg
+│   ├── src
+│   │   ├── App.jsx
+│   │   ├── api
+│   │   │   └── client.js
+│   │   ├── assets
+│   │   │   ├── error.svg
+│   │   │   ├── filetypes
+│   │   │   ├── icons
+│   │   │   ├── info.svg
+│   │   │   ├── loader.svg
+│   │   │   ├── notFound.svg
+│   │   │   ├── sendComment.svg
+│   │   │   ├── shield.svg
+│   │   │   ├── success.svg
+│   │   │   └── warning.svg
+│   │   ├── components
+│   │   │   ├── activity
+│   │   │   ├── admin
+│   │   │   ├── auth
+│   │   │   ├── chat
+│   │   │   ├── comments
+│   │   │   ├── common
+│   │   │   ├── editor
+│   │   │   ├── friends
+│   │   │   ├── landing
+│   │   │   ├── layout
+│   │   │   ├── modals
+│   │   │   ├── notification
+│   │   │   ├── post
+│   │   │   ├── profile
+│   │   │   ├── settings
+│   │   │   ├── spaces
+│   │   │   ├── stickers
+│   │   │   ├── support
+│   │   │   └── ui
+│   │   ├── config.js
+│   │   ├── context
+│   │   │   ├── AudioContext.jsx
+│   │   │   ├── AuthContext.jsx
+│   │   │   ├── ModalContext.jsx
+│   │   │   ├── NotificationContext.jsx
+│   │   │   ├── SocketContext.jsx
+│   │   │   ├── SpaceContext.jsx
+│   │   │   └── ThemeContext.jsx
+│   │   ├── hooks
+│   │   │   ├── useAudioPlayer.js
+│   │   │   ├── useDateFormatter.js
+│   │   │   ├── useEmailVerification.js
+│   │   │   ├── useGender.js
+│   │   │   ├── useImageEditor.js
+│   │   │   ├── useIntersectionObserver.js
+│   │   │   ├── useIsMobile.js
+│   │   │   ├── useNotificationConfig.js
+│   │   │   ├── usePageTitle.js
+│   │   │   ├── useScreenTime.js
+│   │   │   └── useVideoPlayerConfig.js
+│   │   ├── i18n.js
+│   │   ├── locales
+│   │   │   └── uk.json
+│   │   ├── main.jsx
+│   │   ├── pages
+│   │   │   ├── AboutPage.jsx
+│   │   │   ├── ActivityPage.jsx
+│   │   │   ├── AdminPage.jsx
+│   │   │   ├── ChatPage.jsx
+│   │   │   ├── EntityResolverPage.jsx
+│   │   │   ├── FeedPage.jsx
+│   │   │   ├── ForgotPasswordPage.jsx
+│   │   │   ├── FriendsPage.jsx
+│   │   │   ├── IndexPage.jsx
+│   │   │   ├── LoginPage.jsx
+│   │   │   ├── ModerationPage.jsx
+│   │   │   ├── NotFoundPage.jsx
+│   │   │   ├── NotificationsPage.jsx
+│   │   │   ├── PostPage.jsx
+│   │   │   ├── ProfilePage.jsx
+│   │   │   ├── RegisterPage.jsx
+│   │   │   ├── RulesPage.jsx
+│   │   │   ├── SettingsPage.jsx
+│   │   │   ├── SetupProfilePage.jsx
+│   │   │   ├── SpacePage.jsx
+│   │   │   ├── SpacesPage.jsx
+│   │   │   ├── StickerShopPage.jsx
+│   │   │   ├── SupportPage.jsx
+│   │   │   └── SupportPanelPage.jsx
+│   │   ├── routes
+│   │   │   ├── AppRoutes.jsx
+│   │   │   └── Guards.jsx
+│   │   ├── services
+│   │   │   ├── activity.service.js
+│   │   │   ├── admin.service.js
+│   │   │   ├── alias.service.js
+│   │   │   ├── appeal.service.js
+│   │   │   ├── auth.service.js
+│   │   │   ├── chat.service.js
+│   │   │   ├── comment.service.js
+│   │   │   ├── entity.service.js
+│   │   │   ├── feed.service.js
+│   │   │   ├── friend.service.js
+│   │   │   ├── notification.service.js
+│   │   │   ├── notification.settings.service.js
+│   │   │   ├── personalization.service.js
+│   │   │   ├── post.service.js
+│   │   │   ├── privacy.service.js
+│   │   │   ├── public.service.js
+│   │   │   ├── report.service.js
+│   │   │   ├── settings.service.js
+│   │   │   ├── space.service.js
+│   │   │   ├── stats.service.js
+│   │   │   ├── sticker.service.js
+│   │   │   ├── support.service.js
+│   │   │   └── user.service.js
+│   │   ├── styles
+│   │   │   ├── comments.css
+│   │   │   └── global.css
+│   │   ├── themes
+│   │   │   ├── classic.css
+│   │   │   └── xp.css
+│   │   └── utils
+│   │       ├── audioManager.js
+│   │       ├── avatar.js
+│   │       ├── confetti.js
+│   │       ├── editorHelpers.js
+│   │       ├── randomRGB.js
+│   │       ├── react-scan-init.js
+│   │       ├── toRichText.js
+│   │       ├── upload.js
+│   │       └── userAgent.jsx
+│   └── vite.config.js
+├── tetrone-websockets
+│   ├── Dockerfile
+│   ├── logs
+│   │   └── logs.log
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── src
+│   │   ├── config
+│   │   │   ├── config.ts
+│   │   │   └── redis.ts
+│   │   ├── index.ts
+│   │   ├── middlewares
+│   │   │   └── auth.middleware.ts
+│   │   ├── redis
+│   │   │   └── subscriber.ts
+│   │   ├── services
+│   │   │   └── metrics.service.ts
+│   │   ├── sockets
+│   │   │   ├── chat.handler.ts
+│   │   │   ├── handlers.ts
+│   │   │   └── presence.handler.ts
+│   │   ├── types
+│   │   │   └── socket.types.ts
+│   │   └── utils
+│   │       └── logger.ts
+│   └── tsconfig.json
+├── update-all.sh
+└── update.sh
+
+116 directories, 452 files
