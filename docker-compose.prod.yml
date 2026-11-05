@@ -11,8 +11,7 @@ services:
     ports:
       - "81:8000"
     volumes:
-      - backend-storage:/var/www/storage/app
-      - ./tetrone-backend/storage/logs:/var/www/storage/logs
+      - backend-storage:/var/www/storage
       - ./.env:/var/www/.env:ro
     depends_on:
       - db
@@ -32,8 +31,8 @@ services:
       - ./tetrone-backend/.env
       - ./.env
     volumes:
-      - backend-storage:/var/www/storage/app/public
-      - ./tetrone-backend/storage/logs:/var/www/storage/logs
+      - backend-storage:/var/www/storage
+      - ./.env:/var/www/.env:ro
     depends_on:
       - backend
       - db
@@ -53,8 +52,8 @@ services:
       - ./tetrone-backend/.env
       - ./.env
     volumes:
-      - backend-storage:/var/www/storage/app/public
-      - ./tetrone-backend/storage/logs:/var/www/storage/logs
+      - backend-storage:/var/www/storage
+      - ./.env:/var/www/.env:ro
     depends_on:
       - backend
       - db

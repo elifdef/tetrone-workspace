@@ -88,11 +88,13 @@ setup_storage_links() {
         /var/www/storage/framework/sessions \
         /var/www/storage/logs
 
-    docker exec -u 0 tetrone_backend rm -rf /var/www/public/storage
-    docker exec -u 0 tetrone_backend php artisan storage:link || true
-
+    # Надійно виставляємо права ПЕРЕД створенням сімлінка
     docker exec -u 0 tetrone_backend chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
     docker exec -u 0 tetrone_backend chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+
+    # Перестворюємо сімлінк публічного сховища
+    docker exec -u 0 tetrone_backend rm -rf /var/www/public/storage
+    docker exec -u 0 tetrone_backend php artisan storage:link --force
 }
 
 # ================= PRODUCTION =================
@@ -127,7 +129,7 @@ if [ "$MODE" = "prod" ]; then
     fi
 
     echo "Running Laravel production optimizations..."
-    docker exec tetrone_backend php artisan config:clear
+    docker exec tetrone_backend php artisan optimize:clear
     docker exec tetrone_backend php artisan optimize
 
     echo "Production deployment completed successfully!"
