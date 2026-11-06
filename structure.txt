@@ -29,27 +29,99 @@
 │   │   │   └── UserCollection.php
 │   │   ├── Console
 │   │   │   └── Commands
+│   │   │       ├── ClearAllSessionsCommand.php
+│   │   │       ├── PublishScheduledPosts.php
+│   │   │       └── ResetFeedPreferencesCommand.php
 │   │   ├── Data
 │   │   │   ├── Admin
+│   │   │   │   ├── AdminUserData.php
+│   │   │   │   ├── ChangeRoleData.php
+│   │   │   │   ├── CreateAdminLogData.php
+│   │   │   │   ├── ReportData.php
+│   │   │   │   ├── ReportRevertData.php
+│   │   │   │   └── ReviewActionData.php
 │   │   │   ├── Alias
+│   │   │   │   ├── AliasData.php
+│   │   │   │   └── AliasSwapData.php
 │   │   │   ├── Appeal
+│   │   │   │   └── CreateAppealData.php
 │   │   │   ├── Auth
+│   │   │   │   ├── CreateApiTokenData.php
+│   │   │   │   ├── ForgotPasswordData.php
+│   │   │   │   ├── LoginData.php
+│   │   │   │   ├── RegisterData.php
+│   │   │   │   ├── ResetPasswordData.php
+│   │   │   │   ├── SessionData.php
+│   │   │   │   └── VerifyResetCodeData.php
 │   │   │   ├── Chat
+│   │   │   │   ├── ChatData.php
+│   │   │   │   ├── ChatParticipantData.php
+│   │   │   │   ├── MessageData.php
+│   │   │   │   ├── MessageReplyData.php
+│   │   │   │   └── SharedEntityData.php
 │   │   │   ├── Comment
+│   │   │   │   ├── CommentCreateData.php
+│   │   │   │   ├── CommentData.php
+│   │   │   │   └── CommentUpdateData.php
 │   │   │   ├── Friendship
+│   │   │   │   └── FriendshipListFilterData.php
 │   │   │   ├── Notification
+│   │   │   │   ├── NotificationOverrideData.php
+│   │   │   │   ├── NotificationSettingData.php
+│   │   │   │   └── NotificationSettingsBulkData.php
 │   │   │   ├── Personalization
+│   │   │   │   └── PersonalizationUpdateData.php
 │   │   │   ├── Poll
+│   │   │   │   ├── PollData.php
+│   │   │   │   └── PollVoteData.php
 │   │   │   ├── Post
+│   │   │   │   ├── PostCreateData.php
+│   │   │   │   ├── PostData.php
+│   │   │   │   ├── PostPayloadData.php
+│   │   │   │   ├── PostUpdateData.php
+│   │   │   │   └── ReactionConfigData.php
 │   │   │   ├── Privacy
+│   │   │   │   ├── PrivacyExceptionStoreData.php
+│   │   │   │   └── PrivacySettingUpdateData.php
 │   │   │   ├── Public
+│   │   │   │   └── AboutData.php
 │   │   │   ├── Reaction
+│   │   │   │   └── ReactionToggleData.php
 │   │   │   ├── Report
+│   │   │   │   └── ReportSubmitData.php
 │   │   │   ├── Settings
+│   │   │   │   └── FeedPreferenceUpdateData.php
 │   │   │   ├── Space
+│   │   │   │   ├── ChangeRoleData.php
+│   │   │   │   ├── SpaceCreateData.php
+│   │   │   │   ├── SpaceData.php
+│   │   │   │   ├── SpaceInviteCreateData.php
+│   │   │   │   ├── SpaceInviteData.php
+│   │   │   │   ├── SpaceStatsData.php
+│   │   │   │   └── SpaceUpdateData.php
 │   │   │   ├── Sticker
+│   │   │   │   ├── ReorderPacksData.php
+│   │   │   │   ├── ReorderStickersData.php
+│   │   │   │   ├── StickerAddData.php
+│   │   │   │   ├── StickerData.php
+│   │   │   │   ├── StickerPackCreateData.php
+│   │   │   │   ├── StickerPackData.php
+│   │   │   │   ├── StickerPackUpdateData.php
+│   │   │   │   └── StickerUpdateData.php
 │   │   │   ├── Support
+│   │   │   │   ├── AdminTicketListFilterData.php
+│   │   │   │   ├── TicketAttachmentData.php
+│   │   │   │   ├── TicketCreateData.php
+│   │   │   │   ├── TicketData.php
+│   │   │   │   ├── TicketMessageData.php
+│   │   │   │   └── TicketReplyData.php
 │   │   │   └── User
+│   │   │       ├── AccountDeleteData.php
+│   │   │       ├── UpdateEmailData.php
+│   │   │       ├── UpdatePasswordData.php
+│   │   │       ├── UserData.php
+│   │   │       ├── UserListFilterData.php
+│   │   │       └── UserProfileUpdateData.php
 │   │   ├── Enums
 │   │   │   ├── AdminAction.php
 │   │   │   ├── AdminEntityType.php
@@ -63,6 +135,9 @@
 │   │   │   ├── ReportTargetType.php
 │   │   │   ├── Role.php
 │   │   │   ├── Space
+│   │   │   │   ├── SpaceMemberStatus.php
+│   │   │   │   ├── SpacePrivacy.php
+│   │   │   │   └── SpaceRole.php
 │   │   │   └── TicketStatus.php
 │   │   ├── Events
 │   │   │   ├── AttachmentReady.php
@@ -71,7 +146,53 @@
 │   │   │   └── ApiException.php
 │   │   ├── Http
 │   │   │   ├── Controllers
+│   │   │   │   └── Api
+│   │   │   │       └── v1
+│   │   │   │           ├── ActivityController.php
+│   │   │   │           ├── Admin
+│   │   │   │           │   ├── AdminTicketController.php
+│   │   │   │           │   ├── AppealController.php
+│   │   │   │           │   ├── DashboardController.php
+│   │   │   │           │   ├── PostController.php
+│   │   │   │           │   ├── ReportController.php
+│   │   │   │           │   ├── StaffLogController.php
+│   │   │   │           │   └── UserController.php
+│   │   │   │           ├── AliasController.php
+│   │   │   │           ├── AppealController.php
+│   │   │   │           ├── AuthController.php
+│   │   │   │           ├── ChatController.php
+│   │   │   │           ├── CommentController.php
+│   │   │   │           ├── Controller.php
+│   │   │   │           ├── CustomStickerController.php
+│   │   │   │           ├── EmailController.php
+│   │   │   │           ├── FeedController.php
+│   │   │   │           ├── FriendshipController.php
+│   │   │   │           ├── HandleController.php
+│   │   │   │           ├── LikeController.php
+│   │   │   │           ├── NotificationController.php
+│   │   │   │           ├── PollController.php
+│   │   │   │           ├── PostController.php
+│   │   │   │           ├── PrivacySettingsController.php
+│   │   │   │           ├── PublicController.php
+│   │   │   │           ├── ReactionController.php
+│   │   │   │           ├── ReportController.php
+│   │   │   │           ├── SettingsController.php
+│   │   │   │           ├── SpaceController.php
+│   │   │   │           ├── SpaceInviteController.php
+│   │   │   │           ├── SpaceMemberController.php
+│   │   │   │           ├── StickerPackController.php
+│   │   │   │           ├── SupportController.php
+│   │   │   │           └── UserController.php
 │   │   │   └── Middleware
+│   │   │       ├── AdminActivityMiddleware.php
+│   │   │       ├── BlockSpammersMiddleware.php
+│   │   │       ├── CheckFeatureFlag.php
+│   │   │       ├── CheckIfBanned.php
+│   │   │       ├── CheckIfDeleted.php
+│   │   │       ├── CheckIfMuted.php
+│   │   │       ├── ForceJsonResponse.php
+│   │   │       ├── InjectTokenFromCookie.php
+│   │   │       └── UpdateLastSeen.php
 │   │   ├── Jobs
 │   │   │   ├── ExportAndDestroyUserJob.php
 │   │   │   ├── OptimizeAudioAttachment.php
@@ -135,6 +256,10 @@
 │   │   │   ├── ReportRevertedNotification.php
 │   │   │   ├── ReportReviewedNotification.php
 │   │   │   ├── Space
+│   │   │   │   ├── NewSpacePostNotification.php
+│   │   │   │   ├── SpaceMemberKickedNotification.php
+│   │   │   │   ├── SpaceRequestResolvedNotification.php
+│   │   │   │   └── SpaceRoleChangedNotification.php
 │   │   │   ├── TicketReplyNotification.php
 │   │   │   └── UserWarnedNotification.php
 │   │   ├── Policies
@@ -157,6 +282,32 @@
 │   │   │   ├── ChatRepository.php
 │   │   │   ├── CommentRepository.php
 │   │   │   ├── Contracts
+│   │   │   │   ├── ActivityRepositoryInterface.php
+│   │   │   │   ├── AdminLogRepositoryInterface.php
+│   │   │   │   ├── AppealRepositoryInterface.php
+│   │   │   │   ├── ChatRepositoryInterface.php
+│   │   │   │   ├── CommentRepositoryInterface.php
+│   │   │   │   ├── FeedRepositoryInterface.php
+│   │   │   │   ├── FeedRuleEngineInterface.php
+│   │   │   │   ├── FriendshipRepositoryInterface.php
+│   │   │   │   ├── IdentifierRepositoryInterface.php
+│   │   │   │   ├── LikeRepositoryInterface.php
+│   │   │   │   ├── MessageRepositoryInterface.php
+│   │   │   │   ├── NotificationRepositoryInterface.php
+│   │   │   │   ├── NotificationSettingsRepositoryInterface.php
+│   │   │   │   ├── PollRepositoryInterface.php
+│   │   │   │   ├── PostRepositoryInterface.php
+│   │   │   │   ├── PrivacyRepositoryInterface.php
+│   │   │   │   ├── ReactionRepositoryInterface.php
+│   │   │   │   ├── ReportRepositoryInterface.php
+│   │   │   │   ├── SpaceAnalyticsRepositoryInterface.php
+│   │   │   │   ├── SpaceInviteRepositoryInterface.php
+│   │   │   │   ├── SpaceMemberRepositoryInterface.php
+│   │   │   │   ├── SpaceRepositoryInterface.php
+│   │   │   │   ├── StatsRepositoryInterface.php
+│   │   │   │   ├── StickerRepositoryInterface.php
+│   │   │   │   ├── TicketRepositoryInterface.php
+│   │   │   │   └── UserRepositoryInterface.php
 │   │   │   ├── ElasticFeedRuleEngine.php
 │   │   │   ├── FeedRepository.php
 │   │   │   ├── FriendshipRepository.php
@@ -184,6 +335,13 @@
 │   │   ├── Services
 │   │   │   ├── ActivityService.php
 │   │   │   ├── Admin
+│   │   │   │   ├── AdminLogService.php
+│   │   │   │   ├── AdminStreamService.php
+│   │   │   │   ├── DashboardService.php
+│   │   │   │   ├── PostService.php
+│   │   │   │   ├── ReportService.php
+│   │   │   │   ├── ServerMetricsService.php
+│   │   │   │   └── UserService.php
 │   │   │   ├── AliasService.php
 │   │   │   ├── AppealService.php
 │   │   │   ├── AuthService.php
@@ -405,7 +563,19 @@
 │   │   ├── post.png
 │   │   ├── sounds
 │   │   │   ├── longhorn
+│   │   │   │   ├── notification_sound_1.mp3
+│   │   │   │   ├── notification_sound_2.mp3
+│   │   │   │   ├── notification_sound_3.mp3
+│   │   │   │   ├── notification_sound_4.mp3
+│   │   │   │   ├── notification_sound_5.mp3
+│   │   │   │   ├── notification_sound_6.mp3
+│   │   │   │   ├── notification_sound_7.mp3
+│   │   │   │   └── notification_sound_8.mp3
 │   │   │   └── meme
+│   │   │       ├── notification_sound_10.mp3
+│   │   │       ├── notification_sound_11.mp3
+│   │   │       ├── notification_sound_12.mp3
+│   │   │       └── notification_sound_9.mp3
 │   │   └── themes
 │   │       ├── bliss.jpg
 │   │       └── red_moon_desert.jpg
@@ -416,7 +586,18 @@
 │   │   ├── assets
 │   │   │   ├── error.svg
 │   │   │   ├── filetypes
+│   │   │   │   ├── mp3.svg
+│   │   │   │   ├── pdf.svg
+│   │   │   │   ├── rar.svg
+│   │   │   │   ├── what.svg
+│   │   │   │   ├── word.svg
+│   │   │   │   └── zip.svg
 │   │   │   ├── icons
+│   │   │   │   ├── android.svg
+│   │   │   │   ├── apple.svg
+│   │   │   │   ├── tux.svg
+│   │   │   │   ├── unknown.svg
+│   │   │   │   └── windows.svg
 │   │   │   ├── info.svg
 │   │   │   ├── loader.svg
 │   │   │   ├── notFound.svg
@@ -426,24 +607,262 @@
 │   │   │   └── warning.svg
 │   │   ├── components
 │   │   │   ├── activity
+│   │   │   │   ├── ActivityCommentItem.jsx
+│   │   │   │   ├── LikedPostsTab.jsx
+│   │   │   │   ├── MyCommentsTab.jsx
+│   │   │   │   ├── MyRepostsTab.jsx
+│   │   │   │   ├── ScreenTimeTab.jsx
+│   │   │   │   └── VotedPollsTab.jsx
 │   │   │   ├── admin
+│   │   │   │   ├── AdminAppeals.jsx
+│   │   │   │   ├── AdminDashboard.jsx
+│   │   │   │   ├── AdminReports.jsx
+│   │   │   │   ├── AdminTickets.jsx
+│   │   │   │   ├── AdminUserInfo.jsx
+│   │   │   │   ├── PostsManager.jsx
+│   │   │   │   ├── StaffLogs.jsx
+│   │   │   │   └── UsersManager.jsx
 │   │   │   ├── auth
+│   │   │   │   ├── BannedScreen.jsx
+│   │   │   │   ├── ForgotPasswordForm.jsx
+│   │   │   │   ├── LoginForm.jsx
+│   │   │   │   ├── RegisterForm.jsx
+│   │   │   │   └── hooks
+│   │   │   │       ├── useLoginForm.js
+│   │   │   │       └── useRegisterForm.js
 │   │   │   ├── chat
+│   │   │   │   ├── ChatComposer.jsx
+│   │   │   │   ├── ChatInfoModal.jsx
+│   │   │   │   ├── ChatLayout.jsx
+│   │   │   │   ├── ChatModals.jsx
+│   │   │   │   ├── ChatTabs.jsx
+│   │   │   │   ├── ChatWindow.jsx
+│   │   │   │   ├── ConversationList.jsx
+│   │   │   │   ├── MessageActions.jsx
+│   │   │   │   ├── MessageAttachmentsList.jsx
+│   │   │   │   ├── MessageItem.jsx
+│   │   │   │   ├── MessageReplyQuote.jsx
+│   │   │   │   ├── MessageShareableCard.jsx
+│   │   │   │   ├── MessageStatusTicks.jsx
+│   │   │   │   ├── hooks
+│   │   │   │   │   ├── useChatPage.js
+│   │   │   │   │   └── useLocalMessageSearch.js
+│   │   │   │   └── utils
+│   │   │   │       └── messageParser.js
 │   │   │   ├── comments
+│   │   │   │   ├── CommentForm.jsx
+│   │   │   │   ├── CommentItem.jsx
+│   │   │   │   ├── CommentList.jsx
+│   │   │   │   ├── CommentsSection.jsx
+│   │   │   │   └── hooks
+│   │   │   │       ├── commentTree.js
+│   │   │   │       └── useComments.js
 │   │   │   ├── common
+│   │   │   │   ├── ChatScrollContainer.jsx
+│   │   │   │   ├── CookieBanner.jsx
+│   │   │   │   ├── InfiniteScrollList.jsx
+│   │   │   │   ├── MediaEditor
+│   │   │   │   │   ├── EditorUI.jsx
+│   │   │   │   │   ├── constants.js
+│   │   │   │   │   ├── hooks
+│   │   │   │   │   │   ├── core
+│   │   │   │   │   │   │   ├── useCanvasActions.js
+│   │   │   │   │   │   │   ├── useCanvasInit.js
+│   │   │   │   │   │   │   ├── useHistory.js
+│   │   │   │   │   │   │   └── useLayers.js
+│   │   │   │   │   │   ├── useCensorEffect.js
+│   │   │   │   │   │   ├── useCollage.jsx
+│   │   │   │   │   │   ├── useEditorCore.js
+│   │   │   │   │   │   ├── useFilters.jsx
+│   │   │   │   │   │   ├── useMemeGenerator.jsx
+│   │   │   │   │   │   ├── useRichText.jsx
+│   │   │   │   │   │   ├── useShapes.jsx
+│   │   │   │   │   │   └── useTransform.jsx
+│   │   │   │   │   └── useMediaEditor.js
+│   │   │   │   ├── MediaEditorModal.jsx
+│   │   │   │   ├── Notification.jsx
+│   │   │   │   ├── Notify.jsx
+│   │   │   │   └── RichText.jsx
 │   │   │   ├── editor
+│   │   │   │   ├── Composer.jsx
+│   │   │   │   ├── FloatingFormatMenu.jsx
+│   │   │   │   ├── IdentitySwitcher.jsx
+│   │   │   │   ├── MentionList.jsx
+│   │   │   │   ├── PublishButton.jsx
+│   │   │   │   ├── SmartEditor.jsx
+│   │   │   │   ├── StickerPicker.jsx
+│   │   │   │   ├── StickerTooltip.jsx
+│   │   │   │   ├── SuggestionList.jsx
+│   │   │   │   ├── extensions
+│   │   │   │   │   ├── CustomStickerNode.js
+│   │   │   │   │   ├── UniqueId.js
+│   │   │   │   │   └── extensions.js
+│   │   │   │   ├── hooks
+│   │   │   │   │   ├── useEditorExtensions.js
+│   │   │   │   │   └── useOnClickOutside.js
+│   │   │   │   ├── menus
+│   │   │   │   │   ├── AttachmentMenu.jsx
+│   │   │   │   │   ├── EditorContextMenu.jsx
+│   │   │   │   │   ├── FormatMenu.jsx
+│   │   │   │   │   └── StyleMenu.jsx
+│   │   │   │   └── suggestions
+│   │   │   │       ├── StickerSuggestion.js
+│   │   │   │       └── mentionSuggestion.js
 │   │   │   ├── friends
+│   │   │   │   ├── FriendCard.jsx
+│   │   │   │   └── hooks
+│   │   │   │       ├── useFriendsLogic.js
+│   │   │   │       └── useFriendship.js
 │   │   │   ├── landing
+│   │   │   │   ├── FeatureBlock.jsx
+│   │   │   │   ├── FeaturesSection.jsx
+│   │   │   │   ├── LandingAuthWidget.jsx
+│   │   │   │   ├── MobileAuthBlock.jsx
+│   │   │   │   ├── RecentUsersSection.jsx
+│   │   │   │   ├── StatsSection.jsx
+│   │   │   │   ├── WelcomeHeader.jsx
+│   │   │   │   └── WelcomeSection.jsx
 │   │   │   ├── layout
+│   │   │   │   ├── EmailVerificationBanner.jsx
+│   │   │   │   ├── Footer.jsx
+│   │   │   │   ├── GlobalAudioPlayer.jsx
+│   │   │   │   ├── LeftSidebar.jsx
+│   │   │   │   ├── MainLayout.jsx
+│   │   │   │   └── RightSidebar.jsx
 │   │   │   ├── modals
+│   │   │   │   ├── ChangeRoleModal.jsx
+│   │   │   │   ├── ConfirmModal.jsx
+│   │   │   │   ├── CreateSpaceModal.jsx
+│   │   │   │   ├── EditPostModal.jsx
+│   │   │   │   ├── FeedSettingsModal.jsx
+│   │   │   │   ├── Modal.jsx
+│   │   │   │   ├── OnlineUsersModal.jsx
+│   │   │   │   ├── PhotoModal.jsx
+│   │   │   │   ├── PollCreatorModal.jsx
+│   │   │   │   ├── PollVotersModal.jsx
+│   │   │   │   ├── PrivacyExceptionsModal.jsx
+│   │   │   │   ├── PromptModal.jsx
+│   │   │   │   ├── ReportModal.jsx
+│   │   │   │   ├── ReportResultModal.jsx
+│   │   │   │   └── ShareToChatModal.jsx
 │   │   │   ├── notification
+│   │   │   │   ├── NotificationListAvatar.jsx
+│   │   │   │   └── NotificationListItem.jsx
 │   │   │   ├── post
+│   │   │   │   ├── CreatePostForm.jsx
+│   │   │   │   ├── PostFooter.jsx
+│   │   │   │   ├── PostHeader.jsx
+│   │   │   │   ├── PostItem.jsx
+│   │   │   │   ├── UserWall.jsx
+│   │   │   │   ├── WallHeader.jsx
+│   │   │   │   ├── WallPostList.jsx
+│   │   │   │   ├── components
+│   │   │   │   │   ├── AttachBar.jsx
+│   │   │   │   │   ├── MediaPreviews.jsx
+│   │   │   │   │   ├── PollCreator.jsx
+│   │   │   │   │   └── YouTubePreviews.jsx
+│   │   │   │   ├── content
+│   │   │   │   │   ├── AudioTrack.jsx
+│   │   │   │   │   ├── PostContent.jsx
+│   │   │   │   │   ├── PostDocuments.jsx
+│   │   │   │   │   ├── PostGallery.jsx
+│   │   │   │   │   ├── PostPoll.jsx
+│   │   │   │   │   ├── PostVideos.jsx
+│   │   │   │   │   └── ProcessingSkeleton.jsx
+│   │   │   │   └── hooks
+│   │   │   │       ├── useCreatePost.js
+│   │   │   │       ├── useEditPost.js
+│   │   │   │       ├── usePostActions.js
+│   │   │   │       ├── usePostForm.js
+│   │   │   │       ├── usePostMedia.js
+│   │   │   │       └── useUserWall.js
 │   │   │   ├── profile
+│   │   │   │   ├── UserProfileCard.jsx
+│   │   │   │   ├── classic
+│   │   │   │   │   ├── ClassicProfileCard.jsx
+│   │   │   │   │   ├── ProfileActions.jsx
+│   │   │   │   │   ├── ProfileAvatar.jsx
+│   │   │   │   │   ├── ProfileHeader.jsx
+│   │   │   │   │   ├── ProfileInfo.jsx
+│   │   │   │   │   ├── ProfileStatus.jsx
+│   │   │   │   │   └── StaffBanner.jsx
+│   │   │   │   ├── hooks
+│   │   │   │   │   └── useUserProfileLogic.js
+│   │   │   │   ├── modern
+│   │   │   │   │   ├── Banner.jsx
+│   │   │   │   │   ├── Header.jsx
+│   │   │   │   │   ├── Info.jsx
+│   │   │   │   │   └── ModernProfileCard.jsx
+│   │   │   │   └── utils
+│   │   │   │       └── getRoleTitle.jsx
 │   │   │   ├── settings
+│   │   │   │   ├── AddAliasForm.jsx
+│   │   │   │   ├── CountrySelect.jsx
+│   │   │   │   ├── DangerZone.jsx
+│   │   │   │   ├── EmailChangeForm.jsx
+│   │   │   │   ├── GenderSelect.jsx
+│   │   │   │   ├── ImageDropzone.jsx
+│   │   │   │   ├── ManageUsernamesModal.jsx
+│   │   │   │   ├── NotificationSettings.jsx
+│   │   │   │   ├── PasswordChangeForm.jsx
+│   │   │   │   ├── PersonalizationSettings.jsx
+│   │   │   │   ├── PrivacySettings.jsx
+│   │   │   │   ├── ProfileSettings.jsx
+│   │   │   │   ├── SecuritySettings.jsx
+│   │   │   │   ├── SessionsSettings.jsx
+│   │   │   │   ├── UsernameManager.jsx
+│   │   │   │   └── hooks
+│   │   │   │       ├── useProfileSettings.js
+│   │   │   │       └── useSecuritySettings.js
 │   │   │   ├── spaces
+│   │   │   │   ├── SpaceHeaderInfo.jsx
+│   │   │   │   ├── SpaceInvitesTab.jsx
+│   │   │   │   ├── SpaceListItem.jsx
+│   │   │   │   ├── SpaceMembersMini.jsx
+│   │   │   │   ├── SpaceMembersTab.jsx
+│   │   │   │   ├── SpaceRightSidebar.jsx
+│   │   │   │   ├── SpaceRulesTab.jsx
+│   │   │   │   ├── SpaceSettingsTab.jsx
+│   │   │   │   ├── SpaceStatsTab.jsx
+│   │   │   │   ├── SpaceWall.jsx
+│   │   │   │   └── SpaceWallTab.jsx
 │   │   │   ├── stickers
+│   │   │   │   ├── AddStickerModal.jsx
+│   │   │   │   ├── CatalogTab.jsx
+│   │   │   │   ├── CreateStickerPackModal.jsx
+│   │   │   │   ├── MyPacksTab.jsx
+│   │   │   │   ├── PackCard.jsx
+│   │   │   │   ├── StickerEditorModal.jsx
+│   │   │   │   ├── StickerPackGrid.jsx
+│   │   │   │   ├── StickerPackModal.jsx
+│   │   │   │   ├── StickerPackSettings.jsx
+│   │   │   │   └── StickerSearchBar.jsx
 │   │   │   ├── support
+│   │   │   │   ├── SupportTicketForm.jsx
+│   │   │   │   └── views
+│   │   │   │       ├── SupportFaq.jsx
+│   │   │   │       ├── SupportHome.jsx
+│   │   │   │       ├── SupportTicketDetail.jsx
+│   │   │   │       ├── SupportTicketList.jsx
+│   │   │   │       └── TicketMessageBubble.jsx
 │   │   │   └── ui
+│   │   │       ├── Avatar.jsx
+│   │   │       ├── Button.jsx
+│   │   │       ├── Checkbox.jsx
+│   │   │       ├── CustomSelect.jsx
+│   │   │       ├── DateInput.jsx
+│   │   │       ├── ErrorState.jsx
+│   │   │       ├── Icons.jsx
+│   │   │       ├── ImagePreviewModal.jsx
+│   │   │       ├── InfoBox.jsx
+│   │   │       ├── Input.jsx
+│   │   │       ├── PasswordStrengthBar.jsx
+│   │   │       ├── Radio.jsx
+│   │   │       ├── RangeSlider.jsx
+│   │   │       ├── Tabs.jsx
+│   │   │       ├── Textarea.jsx
+│   │   │       ├── VideoPlayer.css
+│   │   │       └── VideoPlayer.jsx
 │   │   ├── config.js
 │   │   ├── context
 │   │   │   ├── AudioContext.jsx
@@ -567,4 +986,4 @@
 ├── update-all.sh
 └── update.sh
 
-116 directories, 452 files
+140 directories, 847 files

@@ -29,11 +29,11 @@ services:
     container_name: tetrone_queue
     restart: unless-stopped
     env_file:
-      - ./tetrone-backend/.env
       - ./.env
     volumes:
       - backend-storage:/var/www/storage/app
       - ./tetrone-backend/storage/logs:/var/www/storage/logs
+      - ./.env:/var/www/.env:ro
     depends_on:
       - backend
       - db
@@ -50,10 +50,10 @@ services:
     container_name: tetrone_schedule
     restart: unless-stopped
     env_file:
-      - ./tetrone-backend/.env
       - ./.env
     volumes:
-      - backend-storage:/var/www/storage
+      - backend-storage:/var/www/storage/app
+      - ./tetrone-backend/storage/logs:/var/www/storage/logs
       - ./.env:/var/www/.env:ro
     depends_on:
       - backend
@@ -71,7 +71,6 @@ services:
     container_name: tetrone_websocket
     restart: unless-stopped
     env_file:
-      - ./tetrone-websockets/.env
       - ./.env
     environment:
       - PORT=${WS_PORT:-3000}
