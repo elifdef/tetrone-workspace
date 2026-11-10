@@ -130,7 +130,9 @@ if [ "$MODE" = "prod" ]; then
 
     echo "Running Laravel production optimizations..."
     docker exec tetrone_backend php artisan optimize:clear
-    docker exec tetrone_backend php artisan optimize
+    docker exec tetrone_backend php artisan config:cache
+    docker exec tetrone_backend php artisan route:cache
+    docker exec tetrone_backend php artisan event:cache
 
     echo "Production deployment completed successfully!"
 
