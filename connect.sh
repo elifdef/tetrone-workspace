@@ -46,8 +46,8 @@ fi
 echo "Connecting to $CONTAINER..."
 
 # Автоматичний вибір оболонки: bash (Debian/Ubuntu) або sh (Alpine)
-if docker exec "$CONTAINER" which bash >/dev/null 2>&1; then
-    docker exec -it "$CONTAINER" bash
+if docker exec "$CONTAINER" test -x /bin/bash; then
+    docker exec -it "$CONTAINER" /bin/bash
 else
-    docker exec -it "$CONTAINER" sh
+    docker exec -it "$CONTAINER" /bin/sh
 fi

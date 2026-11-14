@@ -1,11 +1,19 @@
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   backend:
     build:
       context: ./tetrone-backend
       dockerfile: Dockerfile
       target: prod
+    image: tetrone-backend:prod
     container_name: tetrone_backend
     restart: unless-stopped
+    logging: *default-logging
     env_file:
       - ./.env
     ports:
@@ -15,19 +23,21 @@ services:
       - ./tetrone-backend/storage/logs:/var/www/storage/logs
       - ./.env:/var/www/.env:ro
     depends_on:
-      - db
-      - redis
-      - elasticsearch
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_started
     networks:
       - elifdefinternal
 
   queue:
-    build:
-      context: ./tetrone-backend
-      dockerfile: Dockerfile
-      target: prod
+    image: tetrone-backend:prod
     container_name: tetrone_queue
+    user: www-data
     restart: unless-stopped
+    logging: *default-logging
     env_file:
       - ./.env
     volumes:
@@ -35,20 +45,22 @@ services:
       - ./tetrone-backend/storage/logs:/var/www/storage/logs
       - ./.env:/var/www/.env:ro
     depends_on:
-      - backend
-      - db
-      - redis
+      backend:
+        condition: service_started
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     command: php artisan queue:work --tries=3 --timeout=90 --sleep=3
     networks:
       - elifdefinternal
 
   schedule:
-    build:
-      context: ./tetrone-backend
-      dockerfile: Dockerfile
-      target: prod
+    image: tetrone-backend:prod
     container_name: tetrone_schedule
+    user: www-data
     restart: unless-stopped
+    logging: *default-logging
     env_file:
       - ./.env
     volumes:
@@ -56,9 +68,12 @@ services:
       - ./tetrone-backend/storage/logs:/var/www/storage/logs
       - ./.env:/var/www/.env:ro
     depends_on:
-      - backend
-      - db
-      - redis
+      backend:
+        condition: service_started
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     command: php artisan schedule:work
     networks:
       - elifdefinternal
@@ -70,12 +85,16 @@ services:
       target: prod
     container_name: tetrone_websocket
     restart: unless-stopped
+    logging: *default-logging
     env_file:
       - ./.env
     environment:
       - PORT=${WS_PORT:-3000}
     ports:
       - "82:${WS_PORT:-3000}"
+    depends_on:
+      redis:
+        condition: service_healthy
     networks:
       - elifdefinternal
 
@@ -92,8 +111,11 @@ services:
         VITE_APP_ENV: production
     container_name: tetrone_frontend
     restart: unless-stopped
+    logging: *default-logging
     ports:
       - "80:80"
+    volumes:
+      - backend-storage:/var/www/storage/app:ro
     depends_on:
       - backend
     networks:
@@ -103,6 +125,7 @@ services:
     image: postgres:18-alpine
     container_name: tetrone_postgres
     restart: unless-stopped
+    logging: *default-logging
     env_file:
       - ./.env
     environment:
@@ -112,6 +135,11 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - pgsql-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres} -d ${DB_DATABASE:-tetrone}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     networks:
       - elifdefinternal
 
@@ -119,8 +147,14 @@ services:
     image: redis:8.2-alpine
     container_name: tetrone_redis
     restart: unless-stopped
+    logging: *default-logging
     volumes:
       - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
     networks:
       - elifdefinternal
 
@@ -128,6 +162,7 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:9.5.5
     container_name: tetrone_elasticsearch
     restart: unless-stopped
+    logging: *default-logging
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false

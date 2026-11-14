@@ -4,6 +4,7 @@ services:
       context: ./tetrone-backend
       dockerfile: Dockerfile
       target: dev
+    image: tetrone-backend:dev
     container_name: tetrone_backend
     restart: unless-stopped
     env_file:
@@ -14,17 +15,17 @@ services:
       - ./tetrone-backend:/var/www
       - ./.env:/var/www/.env
     depends_on:
-      - db
-      - redis
-      - elasticsearch
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_started
     networks:
       - elifdefinternal
 
   queue:
-    build:
-      context: ./tetrone-backend
-      dockerfile: Dockerfile
-      target: dev
+    image: tetrone-backend:dev
     container_name: tetrone_queue
     restart: unless-stopped
     env_file:
@@ -33,18 +34,18 @@ services:
       - ./tetrone-backend:/var/www
       - ./.env:/var/www/.env
     depends_on:
-      - backend
-      - db
-      - redis
+      backend:
+        condition: service_started
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     command: php artisan queue:work --verbose --tries=3
     networks:
       - elifdefinternal
 
   schedule:
-    build:
-      context: ./tetrone-backend
-      dockerfile: Dockerfile
-      target: dev
+    image: tetrone-backend:dev
     container_name: tetrone_schedule
     restart: unless-stopped
     env_file:
@@ -53,9 +54,12 @@ services:
       - ./tetrone-backend:/var/www
       - ./.env:/var/www/.env
     depends_on:
-      - backend
-      - db
-      - redis
+      backend:
+        condition: service_started
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     command: php artisan schedule:work
     networks:
       - elifdefinternal
@@ -119,6 +123,11 @@ services:
       - "5432:5432"
     volumes:
       - pgsql-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres} -d ${DB_DATABASE:-tetrone}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     networks:
       - elifdefinternal
 
@@ -130,6 +139,11 @@ services:
       - "6379:6379"
     volumes:
       - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
     networks:
       - elifdefinternal
 
@@ -140,7 +154,7 @@ services:
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
-      - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ports:
       - "9200:9200"
     volumes:

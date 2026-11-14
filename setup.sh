@@ -30,8 +30,4 @@ if [ ! -f ".env" ]; then
     fi
 fi
 
-[ ! -f "tetrone-backend/.env" ] && touch tetrone-backend/.env
-[ ! -f "tetrone-frontend/.env" ] && touch tetrone-frontend/.env
-[ ! -f "tetrone-websockets/.env" ] && touch tetrone-websockets/.env
-
-echo "Setup complete! Fill out root '.env', then run './deploy.sh prod' or './deploy.sh dev'."
+echo "Setup complete! Fill out root '.env' (set APP_ENV=production, APP_DEBUG=false, SCOUT_QUEUE=true for prod), then run './deploy.sh prod' or './deploy.sh dev'."

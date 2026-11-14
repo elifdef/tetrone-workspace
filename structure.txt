@@ -1,16 +1,17 @@
 .
+├── backups
+│   └── 2026-11-13_23-35-35
+│       ├── db_backup.sql.gz
+│       └── storage.tar.gz
+├── backup.sh
+├── connect.sh
 ├── deploy.sh
 ├── docker-compose.dev.yml
 ├── docker-compose.prod.yml
-├── enter.sh
-├── reload.sh
 ├── setup.sh
 ├── structure.txt
 ├── sync.sh
 ├── tetrone-backend
-│   ├── Dockerfile
-│   ├── _ide_helper.php
-│   ├── _ide_helper_models.php
 │   ├── app
 │   │   ├── Broadcasting
 │   │   │   ├── MicroserviceChannel.php
@@ -31,7 +32,9 @@
 │   │   │   └── Commands
 │   │   │       ├── ClearAllSessionsCommand.php
 │   │   │       ├── PublishScheduledPosts.php
-│   │   │       └── ResetFeedPreferencesCommand.php
+│   │   │       ├── ResetFeedPreferencesCommand.php
+│   │   │       ├── ResetUserPasswordCommand.php
+│   │   │       └── VerifyUserEmailCommand.php
 │   │   ├── Data
 │   │   │   ├── Admin
 │   │   │   │   ├── AdminUserData.php
@@ -206,8 +209,8 @@
 │   │   │   └── ResetPasswordCodeMail.php
 │   │   ├── Models
 │   │   │   ├── AdminLog.php
-│   │   │   ├── Chat.php
 │   │   │   ├── ChatParticipant.php
+│   │   │   ├── Chat.php
 │   │   │   ├── Comment.php
 │   │   │   ├── CustomSticker.php
 │   │   │   ├── Friendship.php
@@ -215,25 +218,25 @@
 │   │   │   ├── Hashtag.php
 │   │   │   ├── Like.php
 │   │   │   ├── LoginHistory.php
-│   │   │   ├── Message.php
 │   │   │   ├── MessageAttachment.php
+│   │   │   ├── Message.php
 │   │   │   ├── NotificationOverride.php
 │   │   │   ├── PollVote.php
-│   │   │   ├── Post.php
 │   │   │   ├── PostAttachment.php
-│   │   │   ├── Reaction.php
+│   │   │   ├── Post.php
 │   │   │   ├── ReactionConfig.php
+│   │   │   ├── Reaction.php
 │   │   │   ├── Report.php
-│   │   │   ├── Space.php
 │   │   │   ├── SpaceInvite.php
 │   │   │   ├── SpaceMember.php
+│   │   │   ├── Space.php
 │   │   │   ├── StickerPack.php
-│   │   │   ├── Ticket.php
 │   │   │   ├── TicketAttachment.php
 │   │   │   ├── TicketMessage.php
-│   │   │   ├── User.php
+│   │   │   ├── Ticket.php
 │   │   │   ├── UserActivity.php
 │   │   │   ├── UserFeedPreference.php
+│   │   │   ├── User.php
 │   │   │   ├── UserPrivacyException.php
 │   │   │   └── UserWarning.php
 │   │   ├── Notifications
@@ -332,6 +335,7 @@
 │   │   │   └── UserRepository.php
 │   │   ├── Rules
 │   │   │   ├── AllowedTipTapContentRule.php
+│   │   │   ├── SafeUploadedFile.php
 │   │   │   └── Username.php
 │   │   ├── Services
 │   │   │   ├── ActivityService.php
@@ -394,6 +398,7 @@
 │   ├── config
 │   │   ├── app.php
 │   │   ├── auth.php
+│   │   ├── broadcasting.php
 │   │   ├── cache.php
 │   │   ├── cors.php
 │   │   ├── database.php
@@ -465,10 +470,14 @@
 │   │   │   ├── 2026_08_26_084248_add_new_features_to_spaces_table.php
 │   │   │   ├── 2026_08_26_093841_create_space_invites_table.php
 │   │   │   ├── 2026_08_27_143845_add_flags_to_post_attachments_table.php
-│   │   │   └── 2026_09_16_145054_add_is_pinned_to_posts_table.php
+│   │   │   ├── 2026_09_16_145054_add_is_pinned_to_posts_table.php
+│   │   │   └── 2026_11_09_141217_add_verification_fields_to_users_table.php
 │   │   └── seeders
 │   │       ├── DatabaseSeeder.php
 │   │       └── UserSeeder.php
+│   ├── Dockerfile
+│   ├── _ide_helper_models.php
+│   ├── _ide_helper.php
 │   ├── phpunit.xml
 │   ├── public
 │   │   ├── favicon.ico
@@ -501,8 +510,8 @@
 │       ├── Feature
 │       │   ├── ActivityApiTest.php
 │       │   ├── AdminPanelApiTest.php
-│       │   ├── AliasParsingAndResolutionTest.php
 │       │   ├── AliasesTest.php
+│       │   ├── AliasParsingAndResolutionTest.php
 │       │   ├── AppealApiTest.php
 │       │   ├── AuthApiTest.php
 │       │   ├── ChatApiTest.php
@@ -510,7 +519,6 @@
 │       │   ├── CheckIfBannedTest.php
 │       │   ├── CommentApiTest.php
 │       │   ├── CustomStickerApiTest.php
-│       │   ├── DatabaseManagerApiTest.php
 │       │   ├── DeletedUserApiTest.php
 │       │   ├── ExportAndDestroyUserJobTest.php
 │       │   ├── FriendshipApiTest.php
@@ -540,15 +548,14 @@
 │   ├── eslint.config.js
 │   ├── index.html
 │   ├── nginx.conf
-│   ├── package-lock.json
 │   ├── package.json
+│   ├── package-lock.json
 │   ├── public
 │   │   ├── blocked.jpg
+│   │   ├── cookie.webp
 │   │   ├── default.jpg
 │   │   ├── deleted.jpg
-│   │   ├── dottore_cookie.png
 │   │   ├── friends.png
-│   │   ├── fsociety_cookie.jpg
 │   │   ├── icantdrawandigeneratethisingemini.png
 │   │   ├── images
 │   │   │   ├── profile-classic-dark.png
@@ -563,6 +570,7 @@
 │   │   ├── personalize.png
 │   │   ├── post.png
 │   │   ├── sounds
+│   │   │   ├── IR End.mp3
 │   │   │   ├── longhorn
 │   │   │   │   ├── notification_sound_1.mp3
 │   │   │   │   ├── notification_sound_2.mp3
@@ -581,18 +589,11 @@
 │   │       ├── bliss.jpg
 │   │       └── red_moon_desert.jpg
 │   ├── src
-│   │   ├── App.jsx
 │   │   ├── api
 │   │   │   └── client.js
+│   │   ├── App.jsx
 │   │   ├── assets
 │   │   │   ├── error.svg
-│   │   │   ├── filetypes
-│   │   │   │   ├── mp3.svg
-│   │   │   │   ├── pdf.svg
-│   │   │   │   ├── rar.svg
-│   │   │   │   ├── what.svg
-│   │   │   │   ├── word.svg
-│   │   │   │   └── zip.svg
 │   │   │   ├── icons
 │   │   │   │   ├── android.svg
 │   │   │   │   ├── apple.svg
@@ -626,11 +627,11 @@
 │   │   │   ├── auth
 │   │   │   │   ├── BannedScreen.jsx
 │   │   │   │   ├── ForgotPasswordForm.jsx
+│   │   │   │   ├── hooks
+│   │   │   │   │   ├── useLoginForm.js
+│   │   │   │   │   └── useRegisterForm.js
 │   │   │   │   ├── LoginForm.jsx
-│   │   │   │   ├── RegisterForm.jsx
-│   │   │   │   └── hooks
-│   │   │   │       ├── useLoginForm.js
-│   │   │   │       └── useRegisterForm.js
+│   │   │   │   └── RegisterForm.jsx
 │   │   │   ├── chat
 │   │   │   │   ├── ChatComposer.jsx
 │   │   │   │   ├── ChatInfoModal.jsx
@@ -639,15 +640,15 @@
 │   │   │   │   ├── ChatTabs.jsx
 │   │   │   │   ├── ChatWindow.jsx
 │   │   │   │   ├── ConversationList.jsx
+│   │   │   │   ├── hooks
+│   │   │   │   │   ├── useChatPage.js
+│   │   │   │   │   └── useLocalMessageSearch.js
 │   │   │   │   ├── MessageActions.jsx
 │   │   │   │   ├── MessageAttachmentsList.jsx
 │   │   │   │   ├── MessageItem.jsx
 │   │   │   │   ├── MessageReplyQuote.jsx
 │   │   │   │   ├── MessageShareableCard.jsx
 │   │   │   │   ├── MessageStatusTicks.jsx
-│   │   │   │   ├── hooks
-│   │   │   │   │   ├── useChatPage.js
-│   │   │   │   │   └── useLocalMessageSearch.js
 │   │   │   │   └── utils
 │   │   │   │       └── messageParser.js
 │   │   │   ├── comments
@@ -663,8 +664,8 @@
 │   │   │   │   ├── CookieBanner.jsx
 │   │   │   │   ├── InfiniteScrollList.jsx
 │   │   │   │   ├── MediaEditor
-│   │   │   │   │   ├── EditorUI.jsx
 │   │   │   │   │   ├── constants.js
+│   │   │   │   │   ├── EditorUI.jsx
 │   │   │   │   │   ├── hooks
 │   │   │   │   │   │   ├── core
 │   │   │   │   │   │   │   ├── useCanvasActions.js
@@ -686,7 +687,14 @@
 │   │   │   │   └── RichText.jsx
 │   │   │   ├── editor
 │   │   │   │   ├── Composer.jsx
+│   │   │   │   ├── extensions
+│   │   │   │   │   ├── CustomStickerNode.js
+│   │   │   │   │   ├── extensions.js
+│   │   │   │   │   └── UniqueId.js
 │   │   │   │   ├── FloatingFormatMenu.jsx
+│   │   │   │   ├── hooks
+│   │   │   │   │   ├── useEditorExtensions.js
+│   │   │   │   │   └── useOnClickOutside.js
 │   │   │   │   ├── IdentitySwitcher.jsx
 │   │   │   │   ├── MentionList.jsx
 │   │   │   │   ├── PublishButton.jsx
@@ -694,26 +702,14 @@
 │   │   │   │   ├── StickerPicker.jsx
 │   │   │   │   ├── StickerTooltip.jsx
 │   │   │   │   ├── SuggestionList.jsx
-│   │   │   │   ├── extensions
-│   │   │   │   │   ├── CustomStickerNode.js
-│   │   │   │   │   ├── UniqueId.js
-│   │   │   │   │   └── extensions.js
-│   │   │   │   ├── hooks
-│   │   │   │   │   ├── useEditorExtensions.js
-│   │   │   │   │   └── useOnClickOutside.js
-│   │   │   │   ├── menus
-│   │   │   │   │   ├── AttachmentMenu.jsx
-│   │   │   │   │   ├── EditorContextMenu.jsx
-│   │   │   │   │   ├── FormatMenu.jsx
-│   │   │   │   │   └── StyleMenu.jsx
 │   │   │   │   └── suggestions
-│   │   │   │       ├── StickerSuggestion.js
-│   │   │   │       └── mentionSuggestion.js
+│   │   │   │       ├── mentionSuggestion.js
+│   │   │   │       └── StickerSuggestion.js
 │   │   │   ├── friends
 │   │   │   │   ├── FriendCard.jsx
 │   │   │   │   └── hooks
-│   │   │   │       ├── useFriendsLogic.js
-│   │   │   │       └── useFriendship.js
+│   │   │   │       ├── useFriendship.js
+│   │   │   │       └── useFriendsLogic.js
 │   │   │   ├── landing
 │   │   │   │   ├── FeatureBlock.jsx
 │   │   │   │   ├── FeaturesSection.jsx
@@ -750,35 +746,34 @@
 │   │   │   │   ├── NotificationListAvatar.jsx
 │   │   │   │   └── NotificationListItem.jsx
 │   │   │   ├── post
-│   │   │   │   ├── CreatePostForm.jsx
-│   │   │   │   ├── PostFooter.jsx
-│   │   │   │   ├── PostHeader.jsx
-│   │   │   │   ├── PostItem.jsx
-│   │   │   │   ├── UserWall.jsx
-│   │   │   │   ├── WallHeader.jsx
-│   │   │   │   ├── WallPostList.jsx
 │   │   │   │   ├── components
 │   │   │   │   │   ├── AttachBar.jsx
 │   │   │   │   │   ├── MediaPreviews.jsx
 │   │   │   │   │   ├── PollCreator.jsx
 │   │   │   │   │   └── YouTubePreviews.jsx
 │   │   │   │   ├── content
-│   │   │   │   │   ├── AudioTrack.jsx
+│   │   │   │   │   ├── PostAudios.jsx
 │   │   │   │   │   ├── PostContent.jsx
 │   │   │   │   │   ├── PostDocuments.jsx
 │   │   │   │   │   ├── PostGallery.jsx
 │   │   │   │   │   ├── PostPoll.jsx
 │   │   │   │   │   ├── PostVideos.jsx
 │   │   │   │   │   └── ProcessingSkeleton.jsx
-│   │   │   │   └── hooks
-│   │   │   │       ├── useCreatePost.js
-│   │   │   │       ├── useEditPost.js
-│   │   │   │       ├── usePostActions.js
-│   │   │   │       ├── usePostForm.js
-│   │   │   │       ├── usePostMedia.js
-│   │   │   │       └── useUserWall.js
+│   │   │   │   ├── CreatePostForm.jsx
+│   │   │   │   ├── hooks
+│   │   │   │   │   ├── useCreatePost.js
+│   │   │   │   │   ├── useEditPost.js
+│   │   │   │   │   ├── usePostActions.js
+│   │   │   │   │   ├── usePostForm.js
+│   │   │   │   │   ├── usePostMedia.js
+│   │   │   │   │   └── useUserWall.js
+│   │   │   │   ├── PostFooter.jsx
+│   │   │   │   ├── PostHeader.jsx
+│   │   │   │   ├── PostItem.jsx
+│   │   │   │   ├── UserWall.jsx
+│   │   │   │   ├── WallHeader.jsx
+│   │   │   │   └── WallPostList.jsx
 │   │   │   ├── profile
-│   │   │   │   ├── UserProfileCard.jsx
 │   │   │   │   ├── classic
 │   │   │   │   │   ├── ClassicProfileCard.jsx
 │   │   │   │   │   ├── ProfileActions.jsx
@@ -794,6 +789,7 @@
 │   │   │   │   │   ├── Header.jsx
 │   │   │   │   │   ├── Info.jsx
 │   │   │   │   │   └── ModernProfileCard.jsx
+│   │   │   │   ├── UserProfileCard.jsx
 │   │   │   │   └── utils
 │   │   │   │       └── getRoleTitle.jsx
 │   │   │   ├── settings
@@ -802,6 +798,9 @@
 │   │   │   │   ├── DangerZone.jsx
 │   │   │   │   ├── EmailChangeForm.jsx
 │   │   │   │   ├── GenderSelect.jsx
+│   │   │   │   ├── hooks
+│   │   │   │   │   ├── useProfileSettings.js
+│   │   │   │   │   └── useSecuritySettings.js
 │   │   │   │   ├── ImageDropzone.jsx
 │   │   │   │   ├── ManageUsernamesModal.jsx
 │   │   │   │   ├── NotificationSettings.jsx
@@ -811,10 +810,7 @@
 │   │   │   │   ├── ProfileSettings.jsx
 │   │   │   │   ├── SecuritySettings.jsx
 │   │   │   │   ├── SessionsSettings.jsx
-│   │   │   │   ├── UsernameManager.jsx
-│   │   │   │   └── hooks
-│   │   │   │       ├── useProfileSettings.js
-│   │   │   │       └── useSecuritySettings.js
+│   │   │   │   └── UsernameManager.jsx
 │   │   │   ├── spaces
 │   │   │   │   ├── SpaceHeaderInfo.jsx
 │   │   │   │   ├── SpaceInvitesTab.jsx
@@ -846,12 +842,14 @@
 │   │   │   │       ├── SupportTicketList.jsx
 │   │   │   │       └── TicketMessageBubble.jsx
 │   │   │   └── ui
+│   │   │       ├── AudioTrack.jsx
 │   │   │       ├── Avatar.jsx
 │   │   │       ├── Button.jsx
 │   │   │       ├── Checkbox.jsx
 │   │   │       ├── CustomSelect.jsx
 │   │   │       ├── DateInput.jsx
 │   │   │       ├── ErrorState.jsx
+│   │   │       ├── FileTypeIcon.jsx
 │   │   │       ├── Icons.jsx
 │   │   │       ├── ImagePreviewModal.jsx
 │   │   │       ├── InfoBox.jsx
@@ -861,12 +859,15 @@
 │   │   │       ├── RangeSlider.jsx
 │   │   │       ├── Tabs.jsx
 │   │   │       ├── Textarea.jsx
+│   │   │       ├── UserDisplayName.jsx
+│   │   │       ├── VerifiedBadge.jsx
 │   │   │       ├── VideoPlayer.css
 │   │   │       └── VideoPlayer.jsx
 │   │   ├── config.js
 │   │   ├── context
 │   │   │   ├── AudioContext.jsx
 │   │   │   ├── AuthContext.jsx
+│   │   │   ├── ChatContext.jsx
 │   │   │   ├── ModalContext.jsx
 │   │   │   ├── NotificationContext.jsx
 │   │   │   ├── SocketContext.jsx
@@ -951,39 +952,38 @@
 │   │       ├── avatar.js
 │   │       ├── confetti.js
 │   │       ├── editorHelpers.js
+│   │       ├── fileTypes.js
 │   │       ├── randomRGB.js
 │   │       ├── react-scan-init.js
 │   │       ├── toRichText.js
 │   │       ├── upload.js
 │   │       └── userAgent.jsx
 │   └── vite.config.js
-├── tetrone-websockets
-│   ├── Dockerfile
-│   ├── logs
-│   │   └── logs.log
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── src
-│   │   ├── config
-│   │   │   ├── config.ts
-│   │   │   └── redis.ts
-│   │   ├── index.ts
-│   │   ├── middlewares
-│   │   │   └── auth.middleware.ts
-│   │   ├── redis
-│   │   │   └── subscriber.ts
-│   │   ├── services
-│   │   │   └── metrics.service.ts
-│   │   ├── sockets
-│   │   │   ├── chat.handler.ts
-│   │   │   ├── handlers.ts
-│   │   │   └── presence.handler.ts
-│   │   ├── types
-│   │   │   └── socket.types.ts
-│   │   └── utils
-│   │       └── logger.ts
-│   └── tsconfig.json
-├── update-all.sh
-└── update.sh
+└── tetrone-websockets
+    ├── Dockerfile
+    ├── logs
+    │   └── logs.log
+    ├── package.json
+    ├── package-lock.json
+    ├── src
+    │   ├── config
+    │   │   ├── config.ts
+    │   │   └── redis.ts
+    │   ├── index.ts
+    │   ├── middlewares
+    │   │   └── auth.middleware.ts
+    │   ├── redis
+    │   │   └── subscriber.ts
+    │   ├── services
+    │   │   └── metrics.service.ts
+    │   ├── sockets
+    │   │   ├── chat.handler.ts
+    │   │   ├── handlers.ts
+    │   │   └── presence.handler.ts
+    │   ├── types
+    │   │   └── socket.types.ts
+    │   └── utils
+    │       └── logger.ts
+    └── tsconfig.json
 
 140 directories, 847 files
