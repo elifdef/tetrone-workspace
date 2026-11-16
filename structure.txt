@@ -1,8 +1,4 @@
 .
-├── backups
-│   └── 2026-11-13_23-35-35
-│       ├── db_backup.sql.gz
-│       └── storage.tar.gz
 ├── backup.sh
 ├── connect.sh
 ├── deploy.sh
@@ -17,7 +13,9 @@
 │   │   │   ├── MicroserviceChannel.php
 │   │   │   └── RedisStreamBroadcaster.php
 │   │   ├── Builders
+│   │   │   ├── ChatBuilder.php
 │   │   │   ├── CommentBuilder.php
+│   │   │   ├── MessageBuilder.php
 │   │   │   ├── PostBuilder.php
 │   │   │   └── UserBuilder.php
 │   │   ├── Casts
@@ -25,13 +23,16 @@
 │   │   │   ├── TipTapCast.php
 │   │   │   └── TipTapDataCast.php
 │   │   ├── Collections
+│   │   │   ├── ChatCollection.php
 │   │   │   ├── CommentCollection.php
+│   │   │   ├── MessageCollection.php
 │   │   │   ├── PostCollection.php
 │   │   │   └── UserCollection.php
 │   │   ├── Console
 │   │   │   └── Commands
 │   │   │       ├── ClearAllSessionsCommand.php
 │   │   │       ├── PublishScheduledPosts.php
+│   │   │       ├── PurgeDeletedAccountsAndExports.php
 │   │   │       ├── ResetFeedPreferencesCommand.php
 │   │   │       ├── ResetUserPasswordCommand.php
 │   │   │       └── VerifyUserEmailCommand.php
@@ -59,6 +60,7 @@
 │   │   │   ├── Chat
 │   │   │   │   ├── ChatData.php
 │   │   │   │   ├── ChatParticipantData.php
+│   │   │   │   ├── ForwardedMessageData.php
 │   │   │   │   ├── ForwardMessagesData.php
 │   │   │   │   ├── MessageData.php
 │   │   │   │   ├── MessageReplyData.php
@@ -471,13 +473,15 @@
 │   │   │   ├── 2026_08_26_093841_create_space_invites_table.php
 │   │   │   ├── 2026_08_27_143845_add_flags_to_post_attachments_table.php
 │   │   │   ├── 2026_09_16_145054_add_is_pinned_to_posts_table.php
-│   │   │   └── 2026_11_09_141217_add_verification_fields_to_users_table.php
+│   │   │   ├── 2026_11_09_141217_add_verification_fields_to_users_table.php
+│   │   │   ├── 2026_11_15_150311_add_is_shadow_banned_to_users_table.php
+│   │   │   └── 2026_11_15_205213_add_deletion_tracking_to_users_table.php
+│   │   ├── patches
+│   │   │   └── migrate_polymorphic_types.php
 │   │   └── seeders
 │   │       ├── DatabaseSeeder.php
 │   │       └── UserSeeder.php
 │   ├── Dockerfile
-│   ├── _ide_helper_models.php
-│   ├── _ide_helper.php
 │   ├── phpunit.xml
 │   ├── public
 │   │   ├── favicon.ico
@@ -515,12 +519,10 @@
 │       │   ├── AppealApiTest.php
 │       │   ├── AuthApiTest.php
 │       │   ├── ChatApiTest.php
-│       │   ├── ChatSecurityAndForwardTest.php
 │       │   ├── CheckIfBannedTest.php
 │       │   ├── CommentApiTest.php
 │       │   ├── CustomStickerApiTest.php
 │       │   ├── DeletedUserApiTest.php
-│       │   ├── ExportAndDestroyUserJobTest.php
 │       │   ├── FriendshipApiTest.php
 │       │   ├── GlobalIdentifierFeatureTest.php
 │       │   ├── InteractionApiTest.php
@@ -531,6 +533,7 @@
 │       │   ├── PrivacyApiTest.php
 │       │   ├── ReportApiTest.php
 │       │   ├── RolePermissionsApiTest.php
+│       │   ├── ShadowBanTest.php
 │       │   ├── SpaceApiTest.php
 │       │   ├── SpaceInviteApiTest.php
 │       │   ├── SpaceMemberApiTest.php
@@ -542,11 +545,13 @@
 │       ├── TestCase.php
 │       └── Unit
 │           ├── ChatEncryptionTest.php
+│           ├── ExportAndDestroyUserJobTest.php
 │           └── TipTapContentTest.php
 ├── tetrone-frontend
 │   ├── Dockerfile
 │   ├── eslint.config.js
 │   ├── index.html
+│   ├── jsconfig.json
 │   ├── nginx.conf
 │   ├── package.json
 │   ├── package-lock.json
@@ -639,10 +644,43 @@
 │   │   │   │   ├── ChatModals.jsx
 │   │   │   │   ├── ChatTabs.jsx
 │   │   │   │   ├── ChatWindow.jsx
+│   │   │   │   ├── components
+│   │   │   │   │   ├── common
+│   │   │   │   │   │   └── ChatTitle.jsx
+│   │   │   │   │   ├── composer
+│   │   │   │   │   │   ├── AttachMenuDropdown.jsx
+│   │   │   │   │   │   ├── ComposerAttachmentsPreview.jsx
+│   │   │   │   │   │   ├── ComposerReplyEditBanner.jsx
+│   │   │   │   │   │   └── GraffitiModal.jsx
+│   │   │   │   │   ├── message
+│   │   │   │   │   │   ├── ForwardedMessageBundle.jsx
+│   │   │   │   │   │   ├── MessageContent.jsx
+│   │   │   │   │   │   └── NestedForwardChain.jsx
+│   │   │   │   │   ├── modals
+│   │   │   │   │   │   ├── CreateChatModal.jsx
+│   │   │   │   │   │   ├── info
+│   │   │   │   │   │   │   ├── ChatMediaGrid.jsx
+│   │   │   │   │   │   │   ├── ChatSharedList.jsx
+│   │   │   │   │   │   │   ├── GroupInfoSection.jsx
+│   │   │   │   │   │   │   └── PrivateChatInfoSection.jsx
+│   │   │   │   │   │   ├── JumpToDateModal.jsx
+│   │   │   │   │   │   └── ReportMessageModal.jsx
+│   │   │   │   │   ├── sidebar
+│   │   │   │   │   │   ├── ConversationContextMenu.jsx
+│   │   │   │   │   │   └── ConversationItem.jsx
+│   │   │   │   │   └── window
+│   │   │   │   │       ├── ChatSearchBar.jsx
+│   │   │   │   │       ├── ChatWindowHeader.jsx
+│   │   │   │   │       └── PinnedMessageBanner.jsx
 │   │   │   │   ├── ConversationList.jsx
 │   │   │   │   ├── hooks
+│   │   │   │   │   ├── useChatDrafts.js
+│   │   │   │   │   ├── useChatListActions.js
 │   │   │   │   │   ├── useChatPage.js
-│   │   │   │   │   └── useLocalMessageSearch.js
+│   │   │   │   │   ├── useChatSocket.js
+│   │   │   │   │   ├── useGroupActions.js
+│   │   │   │   │   ├── useLocalMessageSearch.js
+│   │   │   │   │   └── useMessageActions.js
 │   │   │   │   ├── MessageActions.jsx
 │   │   │   │   ├── MessageAttachmentsList.jsx
 │   │   │   │   ├── MessageItem.jsx
@@ -650,6 +688,9 @@
 │   │   │   │   ├── MessageShareableCard.jsx
 │   │   │   │   ├── MessageStatusTicks.jsx
 │   │   │   │   └── utils
+│   │   │   │       ├── chatBadges.js
+│   │   │   │       ├── chatHelpers.js
+│   │   │   │       ├── messageGrouper.js
 │   │   │   │       └── messageParser.js
 │   │   │   ├── comments
 │   │   │   │   ├── CommentForm.jsx
@@ -730,6 +771,7 @@
 │   │   │   │   ├── ChangeRoleModal.jsx
 │   │   │   │   ├── ConfirmModal.jsx
 │   │   │   │   ├── CreateSpaceModal.jsx
+│   │   │   │   ├── DeleteAccountModal.jsx
 │   │   │   │   ├── EditPostModal.jsx
 │   │   │   │   ├── FeedSettingsModal.jsx
 │   │   │   │   ├── Modal.jsx
@@ -874,7 +916,6 @@
 │   │   │   ├── SpaceContext.jsx
 │   │   │   └── ThemeContext.jsx
 │   │   ├── hooks
-│   │   │   ├── useAudioPlayer.js
 │   │   │   ├── useDateFormatter.js
 │   │   │   ├── useEmailVerification.js
 │   │   │   ├── useGender.js
@@ -986,4 +1027,4 @@
     │       └── logger.ts
     └── tsconfig.json
 
-140 directories, 847 files
+147 directories, 881 files
